@@ -1,4 +1,4 @@
-package INF101.Empty;
+package no.uib.inf101.sample;
 
 /**
  * Hello world!
