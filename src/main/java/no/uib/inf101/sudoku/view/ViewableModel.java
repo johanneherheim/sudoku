@@ -15,4 +15,8 @@ public interface ViewableModel {
 
     Board getBoard();
 
+    void setCurrentNumber(Integer number);
+
+    Integer getCurrentNumber();
+
 }

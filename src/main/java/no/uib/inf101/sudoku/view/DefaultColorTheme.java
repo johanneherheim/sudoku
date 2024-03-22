@@ -6,17 +6,6 @@ public class DefaultColorTheme implements IColorTheme {
 
     @Override
     public Color getCellColor(boolean isCorrect, boolean isGiven, Integer number) {
-        if (number == 0) {
-            return Color.DARK_GRAY;
-        }
-        if (isGiven) {
-            return Color.DARK_GRAY;
-        }
-        if (isCorrect) {
-            return new Color(0, 255, 0) /* GREEN */;
-        } else if (!isCorrect) {
-            return new Color(255, 76, 97) /* RED */;
-        }
         return Color.DARK_GRAY;
     }
 
@@ -33,6 +22,11 @@ public class DefaultColorTheme implements IColorTheme {
     @Override
     public Color getTextColor() {
         return Color.LIGHT_GRAY;
+    }
+
+    @Override
+    public Color getButtonColor(boolean isClicked) {
+        return (isClicked ? new Color(31, 31, 31) : new Color(51, 51, 51));
     }
 
 }

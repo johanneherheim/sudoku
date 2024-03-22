@@ -11,4 +11,6 @@ public interface IColorTheme {
     Color getBackgroundColor();
 
     Color getTextColor();
+
+    Color getButtonColor(boolean isClicked);
 }

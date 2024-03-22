@@ -8,6 +8,7 @@ import no.uib.inf101.sudoku.view.ViewableModel;
 public class Model implements ViewableModel, IControllableModel {
     private Board board;
     private GameState gameState;
+    Integer currentNumber = 0;
 
     public Model(Board board) {
         this.board = board;
@@ -33,6 +34,16 @@ public class Model implements ViewableModel, IControllableModel {
     @Override
     public Board getBoard() {
         return board;
+    }
+
+    @Override
+    public void setCurrentNumber(Integer number) {
+        currentNumber = number;
+    }
+
+    @Override
+    public Integer getCurrentNumber() {
+        return currentNumber;
     }
 
 }
