@@ -2,10 +2,10 @@
 
 ### Todo-list:
 
-- [ ] Fetch random sudoku from API OR generate it
-  - [ ] Fetch or generate
-  - [ ] Make into Sudoku-board, with all values
-  - [ ] Make a bot to solve the random sudoku
+- [ ] Generate random and solvable sudoku
+  - [ ] Generate a full grid of numbers (different every time)
+  - [ ] Remove one value at a time, while the grid is still solvable and only has one solution. If we get more than one solution, put the value back and try a different number. Number of attemts based on difficulty.
+  - [ ] Make into sudoku-board
 - [ ] Number buttons to set the number you want to add
 - [ ] Different color-themes
 - [ ] Make use of different game-states
