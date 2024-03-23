@@ -95,6 +95,9 @@ public class View extends JPanel {
     }
 
     private void drawGame(Graphics2D g2) {
+        g2.setColor(colorTheme.getTextColor());
+        g2.setFont(new Font("Verdana", Font.PLAIN, Math.min(getWidth() / 20, getHeight() / 20)));
+        Inf101Graphics.drawCenteredString(g2, "SUDOKU", 0, 0, getWidth(), UPPER_MARGIN);
         drawBoard(g2);
         drawNumberButtons(g2);
     }
@@ -120,7 +123,7 @@ public class View extends JPanel {
 
             g2.fill(cellBounds);
             g2.setColor(colorTheme.getTextColor());
-            g2.setFont(new Font(null, Font.BOLD, Math.min(getWidth() / 30, getHeight() / 30)));
+            g2.setFont(new Font("Consolas", Font.PLAIN, Math.min(getWidth() / 30, getHeight() / 30)));
             {
                 Inf101Graphics.drawCenteredString(g2, Integer.toString(cell.number()), cellBounds.getMinX(),
                         cellBounds.getMinY(),
@@ -138,7 +141,7 @@ public class View extends JPanel {
             g2.setColor(colorTheme.getButtonColor(isClicked[i]));
             g2.fill(cellBounds);
             g2.setColor(colorTheme.getTextColor());
-            g2.setFont(new Font(null, Font.BOLD, Math.min(getWidth() / 30, getHeight() / 30)));
+            g2.setFont(new Font("verdana", Font.PLAIN, Math.min(getWidth() / 30, getHeight() / 30)));
             Inf101Graphics.drawCenteredString(g2, Integer.toString(i + 1), cellBounds.getMinX(), cellBounds.getMinY(),
                     cellBounds.getWidth(), cellBounds.getHeight());
         }
@@ -154,7 +157,7 @@ public class View extends JPanel {
      * @return The canvas for the board
      */
     private Rectangle2D getBoardCanvas() {
-        double maxSize = Math.min(getWidth() - 2 * SIDE_MARGIN, getHeight() - 2 * UPPER_MARGIN);
+        double maxSize = Math.min(getWidth() - 3 * SIDE_MARGIN, getHeight() - 2 * UPPER_MARGIN);
         double x0 = getWidth() / 2 - maxSize / 2;
         double y0 = UPPER_MARGIN;
         return new Rectangle2D.Double(x0, y0, maxSize, maxSize);
@@ -168,7 +171,7 @@ public class View extends JPanel {
     private Rectangle2D getNumberCanvas() {
         double maxSize = Math.min(getWidth() - 2 * SIDE_MARGIN, getHeight() - 2 * UPPER_MARGIN);
         double x0 = getWidth() / 2 - maxSize / 2;
-        double y0 = maxSize + SIDE_MARGIN * 2 + UPPER_MARGIN;
+        double y0 = maxSize + SIDE_MARGIN + UPPER_MARGIN;
         return new Rectangle2D.Double(x0, y0, maxSize, maxSize);
     };
 }
