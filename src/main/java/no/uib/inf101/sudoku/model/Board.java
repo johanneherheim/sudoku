@@ -26,10 +26,4 @@ public class Board extends Grid {
         }
         return board.substring(0, board.length() - 1);
     }
-
-    void clearBoard() {
-        for (GridCell cell : this) {
-            cell = new GridCell(cell.pos(), 0, false, false);
-        }
-    }
 }
