@@ -1,19 +1,24 @@
 package no.uib.inf101.sudoku.model;
 
+import no.uib.inf101.grid.CellPosition;
 import no.uib.inf101.grid.GridCell;
 import no.uib.inf101.grid.IGridDimension;
 import no.uib.inf101.sudoku.controller.IControllableModel;
 import no.uib.inf101.sudoku.view.ViewableModel;
 
 public class Model implements ViewableModel, IControllableModel {
-    private Board board;
+    private static Board board;
+    private static Generator generator;
+    private static Integer currentNumber = 1;
+    private static CellPosition selectedCell;
     private GameState gameState;
-    Integer currentNumber = 0;
 
-    public Model(Board board) {
-        this.board = board;
+    public Model() {
+        generator = new Generator();
+        generator.generateBoard();
+        board = new Board(generator.getPlayableBoard());
         gameState = GameState.WELCOME;
-
+        selectedCell = new CellPosition(0, 0);
     }
 
     @Override
@@ -27,13 +32,23 @@ public class Model implements ViewableModel, IControllableModel {
     }
 
     @Override
+    public Board getBoard() {
+        return board;
+    }
+
+    @Override
     public GameState getGameState() {
         return gameState;
     }
 
     @Override
-    public Board getBoard() {
-        return board;
+    public void setGameState(GameState gameState) {
+        this.gameState = gameState;
+    }
+
+    @Override
+    public Integer getCurrentNumber() {
+        return currentNumber;
     }
 
     @Override
@@ -42,8 +57,33 @@ public class Model implements ViewableModel, IControllableModel {
     }
 
     @Override
-    public Integer getCurrentNumber() {
-        return currentNumber;
+    public CellPosition getSelectedCell() {
+        return selectedCell;
+    }
+
+    @Override
+    public void setSelectedCell(CellPosition cell) {
+        selectedCell = cell;
+    }
+
+    @Override
+    public void checkIfSolved() {
+        for (int row = 0; row < board.getRows(); row++) {
+            for (int col = 0; col < board.getCols(); col++) {
+                if (generator.getSolvedBoard()[row][col] != board.getNumber(row, col)) {
+                    return;
+                }
+            }
+        }
+        gameState = GameState.WIN;
+    }
+
+    @Override
+    public void restart() {
+        generator.generateBoard();
+        board = new Board(generator.getPlayableBoard());
+        gameState = GameState.PLAYING;
+
     }
 
 }
