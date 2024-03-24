@@ -1,5 +1,6 @@
 package no.uib.inf101.sudoku.view;
 
+import no.uib.inf101.grid.CellPosition;
 import no.uib.inf101.grid.GridCell;
 import no.uib.inf101.grid.IGridDimension;
 import no.uib.inf101.sudoku.model.Board;
@@ -11,12 +12,22 @@ public interface ViewableModel {
 
     Iterable<GridCell> getAllTiles();
 
+    Board getBoard();
+
     GameState getGameState();
 
-    Board getBoard();
+    void setGameState(GameState gameState);
+
+    Integer getCurrentNumber();
 
     void setCurrentNumber(Integer number);
 
-    Integer getCurrentNumber();
+    CellPosition getSelectedCell();
+
+    void setSelectedCell(CellPosition cell);
+
+    void checkIfSolved();
+
+    void restart();
 
 }
