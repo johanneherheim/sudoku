@@ -20,11 +20,13 @@ public interface ViewableModel {
 
     Integer getCurrentNumber();
 
-    void setCurrentNumber(Integer number);
+    void giveNumberToCell(Integer number);
 
     CellPosition getSelectedCell();
 
     void setSelectedCell(CellPosition cell);
+
+    Integer getCount();
 
     void checkIfSolved();
 

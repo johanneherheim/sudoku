@@ -11,6 +11,7 @@ public class Model implements ViewableModel, IControllableModel {
     private static Generator generator;
     private static Integer currentNumber = 1;
     private static CellPosition selectedCell;
+    private Integer count;
     private GameState gameState;
 
     public Model() {
@@ -19,6 +20,7 @@ public class Model implements ViewableModel, IControllableModel {
         board = new Board(generator.getPlayableBoard());
         gameState = GameState.WELCOME;
         selectedCell = new CellPosition(0, 0);
+        count = 0;
     }
 
     @Override
@@ -52,8 +54,9 @@ public class Model implements ViewableModel, IControllableModel {
     }
 
     @Override
-    public void setCurrentNumber(Integer number) {
+    public void giveNumberToCell(Integer number) {
         currentNumber = number;
+        count++;
     }
 
     @Override
@@ -83,7 +86,12 @@ public class Model implements ViewableModel, IControllableModel {
         generator.generateBoard();
         board = new Board(generator.getPlayableBoard());
         gameState = GameState.PLAYING;
+        count = 0;
+    }
 
+    @Override
+    public Integer getCount() {
+        return count;
     }
 
 }

@@ -16,22 +16,23 @@ import no.uib.inf101.sudoku.view.tools.Inf101Graphics;
 public class View extends JPanel {
 
     private final IColorTheme colorTheme;
-
     private final ViewableModel model;
 
     private static final String FONT = "Helvetica Neue";
 
-    private static final double GRID_WIDTH = 3;
+    private static final int INNER_MARGIN = 3;
+    private static final int OUTER_MARGIN = 30;
+    private static final int HEADER_HEIGHT = 150;
+    private static final int BOARD_WIDTH = 500;
 
-    private static final double UPPER_MARGIN = 100;
-
-    private static final double SIDE_MARGIN = 15;
+    private static final Dimension GAME_SIZE = new Dimension(BOARD_WIDTH + OUTER_MARGIN * 2,
+            BOARD_WIDTH + OUTER_MARGIN * 2 + HEADER_HEIGHT);
 
     public View(ViewableModel model) {
         this.model = model;
         colorTheme = new DefaultColorTheme();
         setFocusable(true);
-        setPreferredSize(new Dimension(700, 800));
+        setPreferredSize(GAME_SIZE);
         setBackground(colorTheme.getBackgroundColor());
     }
 
@@ -52,8 +53,9 @@ public class View extends JPanel {
             h2(g2, "Press ENTER to start");
         } else if (model.getGameState() == GameState.PLAYING) {
             CellPositionToPixelConverter converter = new CellPositionToPixelConverter(
-                    getBoardCanvas(), model.getDimension(), GRID_WIDTH);
+                    getBoardCanvas(), model.getDimension(), INNER_MARGIN);
             header(g2);
+            score(g2);
             for (GridCell cell : model.getAllTiles()) {
                 drawCell(g2, cell, converter);
             }
@@ -79,32 +81,38 @@ public class View extends JPanel {
     }
 
     private Rectangle2D getBoardCanvas() {
-        double maxSize = Math.min(getWidth() - 3 * SIDE_MARGIN, getHeight() - 2 * UPPER_MARGIN);
-        double x0 = getWidth() / 2 - maxSize / 2;
-        double y0 = UPPER_MARGIN * 3 / 2;
-        return new Rectangle2D.Double(x0, y0, maxSize, maxSize);
+        double x0 = getWidth() / 2 - BOARD_WIDTH / 2;
+        double y0 = HEADER_HEIGHT + OUTER_MARGIN;
+        return new Rectangle2D.Double(x0, y0, BOARD_WIDTH, BOARD_WIDTH);
     }
 
     private void header(Graphics2D g2) {
         g2.setColor(colorTheme.getTextColor());
         g2.setFont(new Font(FONT, Font.BOLD, Math.min(getWidth() / 10, getHeight() / 10)));
-        Inf101Graphics.drawCenteredString(g2, "SUDOKU", 0, 0, getWidth(), UPPER_MARGIN * 3 / 2);
+        Inf101Graphics.drawCenteredString(g2, "SUDOKU", 0, 0, getWidth(),
+                HEADER_HEIGHT + OUTER_MARGIN);
+    }
+
+    private void score(Graphics2D g2) {
+        g2.setFont(new Font(FONT, Font.PLAIN, Math.min(getWidth() / 30, getHeight() / 30)));
+        g2.drawString(" Count: " + model.getCount().toString(), getWidth() / 2 - (int) BOARD_WIDTH / 2,
+                (int) (OUTER_MARGIN + HEADER_HEIGHT) - 10);
     }
 
     private void h1(Graphics2D g2, String text) {
         g2.setColor(colorTheme.getTextColor());
         g2.setFont(new Font(FONT, Font.BOLD, Math.min(getWidth() / 10, getHeight() / 10)));
-        Inf101Graphics.drawCenteredString(g2, text, 0, 0, getWidth(), getHeight() - (int) UPPER_MARGIN);
+        Inf101Graphics.drawCenteredString(g2, text, 0, 0, getWidth(), getHeight() - 100);
     }
 
     private void h2(Graphics2D g2, String text) {
         g2.setFont(new Font(FONT, Font.BOLD, Math.min(getWidth() / 20, getHeight() / 20)));
-        Inf101Graphics.drawCenteredString(g2, text, 0, 0, getWidth(), getHeight() + (int) UPPER_MARGIN);
+        Inf101Graphics.drawCenteredString(g2, text, 0, 0, getWidth(), getHeight() + 100);
     }
 
     private void h3(Graphics2D g2, String text) {
         g2.setFont(new Font(FONT, Font.PLAIN, Math.min(getWidth() / 30, getHeight() / 30)));
-        Inf101Graphics.drawCenteredString(g2, text, 0, 0, getWidth(), getHeight() * 2 - (int) UPPER_MARGIN);
+        Inf101Graphics.drawCenteredString(g2, text, 0, 0, getWidth(), getHeight() * 2 - 100);
     }
 
 }
