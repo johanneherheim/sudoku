@@ -13,12 +13,14 @@ public class Model implements ViewableModel, IControllableModel {
     private static CellPosition selectedCell;
     private Integer count;
     private GameState gameState;
+    private long startTimeMillis;
 
     public Model() {
         generator = new Generator();
         generator.generateBoard();
-        board = new Board(generator.getPlayableBoard());
+        board = new Board(generator.getPlayableBoard(), generator.getSolvedBoard());
         gameState = GameState.WELCOME;
+        startTimeMillis = System.currentTimeMillis();
         selectedCell = new CellPosition(0, 0);
         count = 0;
     }
@@ -45,6 +47,9 @@ public class Model implements ViewableModel, IControllableModel {
 
     @Override
     public void setGameState(GameState gameState) {
+        if (gameState == GameState.PLAYING) {
+            startTimeMillis = System.currentTimeMillis();
+        }
         this.gameState = gameState;
     }
 
@@ -56,7 +61,10 @@ public class Model implements ViewableModel, IControllableModel {
     @Override
     public void giveNumberToCell(Integer number) {
         currentNumber = number;
-        count++;
+        board.setNumber(selectedCell, number);
+        if (!board.isGiven(selectedCell.row(), selectedCell.col())) {
+            count++;
+        }
     }
 
     @Override
@@ -84,7 +92,7 @@ public class Model implements ViewableModel, IControllableModel {
     @Override
     public void restart() {
         generator.generateBoard();
-        board = new Board(generator.getPlayableBoard());
+        board = new Board(generator.getPlayableBoard(), generator.getSolvedBoard());
         gameState = GameState.PLAYING;
         count = 0;
     }
@@ -92,6 +100,17 @@ public class Model implements ViewableModel, IControllableModel {
     @Override
     public Integer getCount() {
         return count;
+    }
+
+    @Override
+    public Integer getDelay() {
+        return 1000;
+    }
+
+    @Override
+    public long getTimeElapsed() {
+        long currentTimeMillis = System.currentTimeMillis();
+        return currentTimeMillis - startTimeMillis;
     }
 
 }

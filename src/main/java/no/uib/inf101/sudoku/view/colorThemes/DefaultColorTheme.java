@@ -9,6 +9,9 @@ public class DefaultColorTheme implements IColorTheme {
     @Override
     public Color getCellColor(boolean isCorrect, boolean isGiven, Integer number, CellPosition cellPosition,
             CellPosition selectedCell) {
+        if (!isCorrect) {
+            return new Color(204, 76, 97);
+        }
         if (cellPosition.row() == selectedCell.row() && cellPosition.col() == selectedCell.col()) {
             return new Color(31, 31, 31);
         } else if (cellPosition.col() < 3 && cellPosition.row() < 3 || cellPosition.col() > 5 && cellPosition.row() < 3

@@ -2,6 +2,7 @@ package no.uib.inf101.sudoku.view;
 
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
@@ -44,7 +45,6 @@ public class View extends JPanel {
     }
 
     private void drawGame(Graphics2D g2) {
-        model.checkIfSolved();
         if (model.getGameState() == GameState.WIN) {
             h1(g2, "SOLVED");
             h3(g2, "Press ENTER to restart");
@@ -56,6 +56,7 @@ public class View extends JPanel {
                     getBoardCanvas(), model.getDimension(), INNER_MARGIN);
             header(g2);
             score(g2);
+            timer(g2);
             for (GridCell cell : model.getAllTiles()) {
                 drawCell(g2, cell, converter);
             }
@@ -95,8 +96,26 @@ public class View extends JPanel {
 
     private void score(Graphics2D g2) {
         g2.setFont(new Font(FONT, Font.PLAIN, Math.min(getWidth() / 30, getHeight() / 30)));
-        g2.drawString(" Count: " + model.getCount().toString(), getWidth() / 2 - (int) BOARD_WIDTH / 2,
-                (int) (OUTER_MARGIN + HEADER_HEIGHT) - 10);
+        g2.drawString(" Count: " + model.getCount().toString(), getWidth() / 2 - BOARD_WIDTH / 2,
+                OUTER_MARGIN + HEADER_HEIGHT - 10);
+    }
+
+    private void timer(Graphics2D g2) {
+        String timerText = "";
+        if (model.getGameState() == GameState.PLAYING) {
+            long timeInMillis = model.getTimeElapsed();
+            long seconds = timeInMillis / 1000;
+            long minutes = seconds / 60;
+            long hours = minutes / 60;
+            seconds %= 60;
+            minutes %= 60;
+            timerText = String.format("%02d:%02d:%02d ", hours, minutes, seconds);
+        }
+        g2.setFont(new Font(FONT, Font.PLAIN, Math.min(getWidth() / 30, getHeight() / 30)));
+        FontMetrics metrics = g2
+                .getFontMetrics(new Font(FONT, Font.PLAIN, Math.min(getWidth() / 30, getHeight() / 30)));
+        int stringLength = metrics.stringWidth(timerText);
+        g2.drawString(timerText, OUTER_MARGIN + BOARD_WIDTH - stringLength, OUTER_MARGIN + HEADER_HEIGHT - 10);
     }
 
     private void h1(Graphics2D g2, String text) {

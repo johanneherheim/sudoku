@@ -23,5 +23,9 @@ public interface IControllableModel {
 
     void setSelectedCell(CellPosition cell);
 
+    Integer getDelay();
+
+    void checkIfSolved();
+
     void restart();
 }

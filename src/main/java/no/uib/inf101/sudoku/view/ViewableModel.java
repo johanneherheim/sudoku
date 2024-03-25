@@ -28,8 +28,12 @@ public interface ViewableModel {
 
     Integer getCount();
 
+    Integer getDelay();
+
     void checkIfSolved();
 
     void restart();
+
+    long getTimeElapsed();
 
 }

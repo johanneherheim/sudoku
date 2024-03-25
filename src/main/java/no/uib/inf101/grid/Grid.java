@@ -11,12 +11,15 @@ public class Grid implements IGrid {
 
     private ArrayList<GridCell> cells = new ArrayList<GridCell>();
 
-    public Grid(int rows, int cols, int[][] values) {
+    private int[][] solution;
+
+    public Grid(int rows, int cols, int[][] values, int[][] solution) {
         this.rows = rows;
         this.cols = cols;
+        this.solution = solution;
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
-                cells.add(new GridCell(new CellPosition(row, col), values[row][col], true, true));
+                cells.add(new GridCell(new CellPosition(row, col), values[row][col], true, values[row][col] != 0));
             }
         }
     }
@@ -47,9 +50,10 @@ public class Grid implements IGrid {
     public void setNumber(CellPosition cellPosition, int number) {
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
-                if (cellPosition.equals(new CellPosition(row, col))) {
-                    cells.set(row * cols + col, new GridCell(cellPosition, number, false, false));
-                }
+                if (!isGiven(row, col))
+                    if (cellPosition.equals(new CellPosition(row, col))) {
+                        cells.set(row * cols + col, new GridCell(cellPosition, number, true, false));
+                    }
             }
         }
     }
@@ -61,12 +65,11 @@ public class Grid implements IGrid {
 
     @Override
     public boolean isCorrect(int row, int col) {
-        return cells.get(row * cols + col).isCorrect();
+        return cells.get(row * cols + col).number() == solution[row][col] || cells.get(row * cols + col).number() == 0;
     }
 
     @Override
     public boolean isGiven(int row, int col) {
         return cells.get(row * cols + col).isGiven();
     }
-
 }

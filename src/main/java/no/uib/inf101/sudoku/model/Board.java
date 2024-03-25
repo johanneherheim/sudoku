@@ -5,8 +5,8 @@ import no.uib.inf101.grid.GridCell;
 
 public class Board extends Grid {
 
-    public Board(int[][] generatedBoard) {
-        super(generatedBoard.length, generatedBoard[0].length, generatedBoard);
+    public Board(int[][] playableBoard, int[][] solution) {
+        super(playableBoard.length, playableBoard[0].length, playableBoard, solution);
     }
 
     /**
