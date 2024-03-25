@@ -54,25 +54,25 @@ public class Controller implements java.awt.event.KeyListener {
 
             } else {
                 if (e.getKeyCode() == KeyEvent.VK_1) {
-                    model.setCurrentNumber(1);
+                    model.giveNumberToCell(1);
                 } else if (e.getKeyCode() == KeyEvent.VK_2) {
-                    model.setCurrentNumber(2);
+                    model.giveNumberToCell(2);
                 } else if (e.getKeyCode() == KeyEvent.VK_3) {
-                    model.setCurrentNumber(3);
+                    model.giveNumberToCell(3);
                 } else if (e.getKeyCode() == KeyEvent.VK_4) {
-                    model.setCurrentNumber(4);
+                    model.giveNumberToCell(4);
                 } else if (e.getKeyCode() == KeyEvent.VK_5) {
-                    model.setCurrentNumber(5);
+                    model.giveNumberToCell(5);
                 } else if (e.getKeyCode() == KeyEvent.VK_6) {
-                    model.setCurrentNumber(6);
+                    model.giveNumberToCell(6);
                 } else if (e.getKeyCode() == KeyEvent.VK_7) {
-                    model.setCurrentNumber(7);
+                    model.giveNumberToCell(7);
                 } else if (e.getKeyCode() == KeyEvent.VK_8) {
-                    model.setCurrentNumber(8);
+                    model.giveNumberToCell(8);
                 } else if (e.getKeyCode() == KeyEvent.VK_9) {
-                    model.setCurrentNumber(9);
+                    model.giveNumberToCell(9);
                 } else if (e.getKeyCode() == KeyEvent.VK_0) {
-                    model.setCurrentNumber(0);
+                    model.giveNumberToCell(0);
                 }
                 model.getBoard().setNumber(model.getSelectedCell(), model.getCurrentNumber());
             }

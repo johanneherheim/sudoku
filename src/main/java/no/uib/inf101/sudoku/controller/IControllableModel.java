@@ -17,7 +17,7 @@ public interface IControllableModel {
 
     Integer getCurrentNumber();
 
-    void setCurrentNumber(Integer number);
+    void giveNumberToCell(Integer number);
 
     CellPosition getSelectedCell();
 
