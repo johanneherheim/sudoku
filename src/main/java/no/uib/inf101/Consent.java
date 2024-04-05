@@ -13,19 +13,19 @@ public class Consent {
      * I give consent that my name is published along side this application (and
      * video).
      */
-    public static boolean shareName = true;
+    public static final boolean shareName = true;
 
     /**
      * I give consent that this application is used for teaching of computer science
      * at the Department of Informatics, University of Bergen.
      */
-    public static boolean shareApplication = true;
+    public static final boolean shareApplication = true;
 
     /**
      * I give consent that the video produced along side this application is used
      * for teaching of computer science at the Department of Informatics, University
      * of Bergen.
      */
-    public static boolean shareVideo = true;
+    public static final boolean shareVideo = true;
 
 }
