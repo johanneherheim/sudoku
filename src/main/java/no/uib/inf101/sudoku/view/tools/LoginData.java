@@ -35,6 +35,9 @@ public class LoginData {
     }
 
     public void addNewUser(String username, String password) {
+        // stackoverflow
+        // https://stackoverflow.com/questions/5531455/how-to-hash-some-string-with-sha-256-in-java
+        // 06.04.2024
         String hashedPassword = DigestUtils.sha256Hex(password);
         try (BufferedWriter bw = new BufferedWriter(new FileWriter("db/user.csv", true))) {
             bw.write(username + "," + hashedPassword + "\n");

@@ -71,24 +71,28 @@ public class LoginPage implements ActionListener, KeyListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == loginButton) {
 
-            String userID = usernameInput.getText();
+            String username = usernameInput.getText();
             String password = String.valueOf(passwordInput.getPassword());
 
-            if (loginInfo.getData().containsKey(userID)) {
-                if (loginInfo.getData().get(userID).equals(DigestUtils.sha256Hex(password))) {
+            if (loginInfo.getData().containsKey(username)) {
+                if (loginInfo.getData().get(username).equals(DigestUtils.sha256Hex(password))) {
                     frame.dispose();
                     @SuppressWarnings("unused")
-                    WelcomePage welcomePage = new WelcomePage(userID);
+                    WelcomePage welcomePage = new WelcomePage(username);
                 } else {
                     messageLabel.setText("Feil passord");
+                    usernameInput.setText("");
+                    passwordInput.setText("");
                 }
             } else {
                 messageLabel.setText("Feil brukarnavn");
+                usernameInput.setText("");
+                passwordInput.setText("");
             }
         }
         if (e.getSource() == signupButton) {
             if (usernameInput.getText().equals("") || String.valueOf(passwordInput.getPassword()).equals("")) {
-                messageLabel.setText("Fyll ut alle felt, plis");
+                messageLabel.setText("Fyll ut alle felt, takk");
             } else if (loginInfo.getData().containsKey(usernameInput.getText())) {
                 messageLabel.setText("Brukarnamnet er allereie i bruk");
             } else {

@@ -14,7 +14,7 @@ public class WelcomePage implements ActionListener {
 
     WelcomePage(String username) {
 
-        logoutButton.setBounds(500, 100, 100, 25);
+        logoutButton.setBounds(495, 10, 100, 25);
         logoutButton.addActionListener(this);
 
         frame.add(logoutButton);
