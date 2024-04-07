@@ -1,24 +1,22 @@
-package no.uib.inf101.sudoku.view.tools;
+package no.uib.inf101.sudoku.dao;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.apache.commons.codec.digest.DigestUtils;
+import no.uib.inf101.sudoku.model.User;
 
-public class LoginData {
-    HashMap<String, String> loginData = new HashMap<String, String>();
+public class UserUtils {
 
-    public LoginData() {
-        readCSV("db/user.csv");
-    }
-
-    private void readCSV(String csvFilePath) {
+    public List<User> getAllUsers() {
+        String csvFilePath = "src/main/resources/db/user.csv";
         String line;
         String csvSplitBy = ",";
+        List<User> loginData = new ArrayList<User>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
             br.readLine();
@@ -27,27 +25,22 @@ public class LoginData {
                 // i use trim to remove whitespace
                 String username = data[0].trim();
                 String password = data[1].trim();
-                loginData.put(username, password);
+                loginData.add(new User(username, password));
             }
+            return loginData;
         } catch (IOException e) {
             throw new RuntimeException("Error reading CSV file: " + e.getMessage());
         }
     }
 
-    public void addNewUser(String username, String password) {
+    public void insertUser(String username, String password) {
         // stackoverflow
         // https://stackoverflow.com/questions/5531455/how-to-hash-some-string-with-sha-256-in-java
         // 06.04.2024
-        String hashedPassword = DigestUtils.sha256Hex(password);
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter("db/user.csv", true))) {
-            bw.write(username + "," + hashedPassword + "\n");
-            loginData.put(username, hashedPassword);
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("src/main/resources/db/user.csv", true))) {
+            bw.write(username + "," + password + "\n");
         } catch (Exception e) {
             throw new RuntimeException("Error adding new user: " + e.getMessage());
         }
-    }
-
-    public HashMap<String, String> getData() {
-        return loginData;
     }
 }

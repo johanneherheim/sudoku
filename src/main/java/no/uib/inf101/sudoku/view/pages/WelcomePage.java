@@ -6,8 +6,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
-import no.uib.inf101.sudoku.view.tools.LoginData;
-
 public class WelcomePage implements ActionListener {
     JFrame frame = new JFrame();
     JButton logoutButton = new JButton("Logg ut");
@@ -30,9 +28,8 @@ public class WelcomePage implements ActionListener {
         if (e.getSource() == logoutButton) {
             frame.dispose();
 
-            LoginData idandPasswords = new LoginData();
             @SuppressWarnings("unused")
-            LoginPage loginPage = new LoginPage(idandPasswords);
+            LoginPage loginPage = new LoginPage();
         }
     }
 }

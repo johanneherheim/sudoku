@@ -8,13 +8,16 @@ import javax.swing.JTextField;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
-import no.uib.inf101.sudoku.view.tools.LoginData;
+import no.uib.inf101.sudoku.dao.UserUtils;
+import no.uib.inf101.sudoku.model.User;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginPage implements ActionListener, KeyListener {
 
@@ -27,10 +30,12 @@ public class LoginPage implements ActionListener, KeyListener {
     JLabel passwordLabel = new JLabel("Passord:");
     JLabel messageLabel = new JLabel();
 
-    LoginData loginInfo = new LoginData();
+    UserUtils userQueries = new UserUtils();
+    List<User> users = new ArrayList<User>();
 
-    public LoginPage(LoginData loginInfo) {
-        this.loginInfo = loginInfo;
+    public LoginPage() {
+        users = userQueries.getAllUsers();
+
         usernameInput.addKeyListener(this);
         passwordInput.addKeyListener(this);
         loginButton.addKeyListener(this);
@@ -73,39 +78,57 @@ public class LoginPage implements ActionListener, KeyListener {
 
             String username = usernameInput.getText();
             String password = String.valueOf(passwordInput.getPassword());
+            boolean userNotFound = true;
 
-            if (loginInfo.getData().containsKey(username)) {
-                if (loginInfo.getData().get(username).equals(DigestUtils.sha256Hex(password))) {
-                    frame.dispose();
-                    @SuppressWarnings("unused")
-                    WelcomePage welcomePage = new WelcomePage(username);
-                } else {
-                    messageLabel.setText("Feil passord");
-                    usernameInput.setText("");
-                    passwordInput.setText("");
+            for (User user : users) {
+                if (user.getUsername().equals(username)) {
+                    userNotFound = false;
+                    if (user.getPassword().equals(hash(password))) {
+                        frame.dispose();
+                        @SuppressWarnings("unused")
+                        WelcomePage welcomePage = new WelcomePage(username);
+                    } else {
+                        messageLabel.setText("Feil passord");
+                        usernameInput.setText("");
+                        passwordInput.setText("");
+                    }
+                    break;
                 }
-            } else {
-                messageLabel.setText("Feil brukarnavn");
+            }
+            if (userNotFound) {
+                messageLabel.setText("Brukarnamnet finst ikkje");
                 usernameInput.setText("");
                 passwordInput.setText("");
             }
         }
         if (e.getSource() == signupButton) {
-            if (usernameInput.getText().equals("") || String.valueOf(passwordInput.getPassword()).equals("")) {
+
+            String newUsername = usernameInput.getText();
+            String newPassword = String.valueOf(passwordInput.getPassword());
+            boolean usernameExists = false;
+
+            for (User user : users) {
+                if (user.getUsername().equals(newUsername)) {
+                    usernameExists = true;
+                    break;
+                }
+            }
+            if (newUsername.equals("") || newPassword.equals("")) {
                 messageLabel.setText("Fyll ut alle felt, takk");
-            } else if (loginInfo.getData().containsKey(usernameInput.getText())) {
-                messageLabel.setText("Brukarnamnet er allereie i bruk");
+            } else if (usernameExists) {
+                messageLabel.setText("Brukarnamnet er allerede i bruk");
             } else {
-                loginInfo.addNewUser(usernameInput.getText(), String.valueOf(passwordInput.getPassword()));
+                userQueries.insertUser(newUsername, hash(newPassword));
                 frame.dispose();
                 @SuppressWarnings("unused")
-                WelcomePage welcomePage = new WelcomePage(usernameInput.getText());
+                WelcomePage welcomePage = new WelcomePage(newUsername);
             }
         }
+
     }
 
-    @Override
-    public void keyTyped(KeyEvent e) {
+    private String hash(String message) {
+        return DigestUtils.sha256Hex(message);
     }
 
     @Override
@@ -113,6 +136,10 @@ public class LoginPage implements ActionListener, KeyListener {
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             loginButton.doClick();
         }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
     }
 
     @Override
