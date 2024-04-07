@@ -84,9 +84,9 @@ public class LoginPage implements ActionListener, KeyListener {
                 if (user.getUsername().equals(username)) {
                     userNotFound = false;
                     if (user.getPassword().equals(hash(password))) {
-                        frame.dispose();
                         @SuppressWarnings("unused")
                         WelcomePage welcomePage = new WelcomePage(username);
+                        frame.dispose();
                     } else {
                         messageLabel.setText("Feil passord");
                         usernameInput.setText("");
@@ -119,9 +119,9 @@ public class LoginPage implements ActionListener, KeyListener {
                 messageLabel.setText("Brukarnamnet er allerede i bruk");
             } else {
                 userQueries.insertUser(newUsername, hash(newPassword));
-                frame.dispose();
                 @SuppressWarnings("unused")
                 WelcomePage welcomePage = new WelcomePage(newUsername);
+                frame.dispose();
             }
         }
 
