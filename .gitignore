@@ -9,6 +9,7 @@
 /bin/
 bin
 tmp
+src/main/resources/db/user.csv
 
 # Packages #
 ############
