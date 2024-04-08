@@ -7,18 +7,19 @@ import java.util.List;
 public class Generator {
     private static final int SIZE = 9;
     private static final int EMPTY = 0;
-    private static final int DIFFICULTY = 3;
+    Difficulty difficulty;
     private static int[][] solvedBoard;
     private static int[][] playableBoard;
 
-    public Generator() {
+    public Generator(Difficulty difficulty) {
+        this.difficulty = difficulty;
         solvedBoard = new int[SIZE][SIZE];
         playableBoard = new int[SIZE][SIZE];
     }
 
     public void generateBoard() {
         fillBoard(0, 0);
-        makeBoardPlayable(DIFFICULTY);
+        makeBoardPlayable(getDifficulty());
     }
 
     private boolean fillBoard(int row, int col) {
@@ -85,4 +86,13 @@ public class Generator {
         return playableBoard;
     }
 
+    public Integer getDifficulty() {
+        if (difficulty == Difficulty.EASY) {
+            return 1;
+        } else if (difficulty == Difficulty.MEDIUM) {
+            return 2;
+        } else {
+            return 3;
+        }
+    }
 }

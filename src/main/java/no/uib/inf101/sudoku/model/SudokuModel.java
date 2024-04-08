@@ -1,14 +1,10 @@
 package no.uib.inf101.sudoku.model;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-
 import no.uib.inf101.grid.CellPosition;
 import no.uib.inf101.grid.GridCell;
 import no.uib.inf101.grid.GridDimension;
 import no.uib.inf101.sudoku.controller.ControllableSudokuModel;
+import no.uib.inf101.sudoku.dao.ScoreUtils;
 import no.uib.inf101.sudoku.view.ViewableSudokuModel;
 
 public class SudokuModel implements ViewableSudokuModel, ControllableSudokuModel {
@@ -19,9 +15,12 @@ public class SudokuModel implements ViewableSudokuModel, ControllableSudokuModel
     private Integer count;
     private GameState gameState;
     private long startTimeMillis;
+    private ScoreUtils scoreQueries = new ScoreUtils();
+    String username;
+    Difficulty difficulty = Difficulty.EASY;
 
     public SudokuModel() {
-        generator = new Generator();
+        generator = new Generator(difficulty);
         generator.generateBoard();
         board = new SudokuBoard(generator.getPlayableBoard(), generator.getSolvedBoard());
         gameState = GameState.WELCOME;
@@ -91,22 +90,16 @@ public class SudokuModel implements ViewableSudokuModel, ControllableSudokuModel
                 }
             }
         }
-        gameState = GameState.WIN;
-        // stack overflow
-        // https://stackoverflow.com/questions/1625234/how-to-append-text-to-an-existing-file-in-java
-        // 7. mars 2024
-        try (FileWriter fw = new FileWriter("db/scores.txt", true);
-                BufferedWriter bw = new BufferedWriter(fw);
-                PrintWriter out = new PrintWriter(bw)) {
-            out.println(getTimeElapsed());
-        } catch (IOException e) {
-            System.err.println("An error occurred while saving your time.");
+        if (gameState != GameState.FINISHED) {
+            scoreQueries.insertScore(username, count, getTimeElapsed(), 0, 0, generator.getPlayableBoard(),
+                    generator.getSolvedBoard(), generator.getDifficulty());
         }
+        gameState = GameState.FINISHED;
     }
 
     @Override
     public void restart() {
-        generator = new Generator();
+        generator = new Generator(difficulty);
         generator.generateBoard();
         board = new SudokuBoard(generator.getPlayableBoard(), generator.getSolvedBoard());
         gameState = GameState.PLAYING;
@@ -128,5 +121,13 @@ public class SudokuModel implements ViewableSudokuModel, ControllableSudokuModel
     public long getTimeElapsed() {
         long currentTimeMillis = System.currentTimeMillis();
         return currentTimeMillis - startTimeMillis;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
     }
 }

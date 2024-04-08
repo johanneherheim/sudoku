@@ -5,24 +5,33 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import no.uib.inf101.grid.GridCell;
 import no.uib.inf101.sudoku.controller.Controller;
+import no.uib.inf101.sudoku.dao.ScoreUtils;
 import no.uib.inf101.sudoku.model.GameState;
+import no.uib.inf101.sudoku.model.Score;
 import no.uib.inf101.sudoku.model.SudokuModel;
 import no.uib.inf101.sudoku.view.colorthemes.ColorTheme;
 import no.uib.inf101.sudoku.view.colorthemes.DefaultColorTheme;
 import no.uib.inf101.sudoku.view.tools.CellPositionToPixelConverter;
 import no.uib.inf101.sudoku.view.tools.Inf101Graphics;
 
-public class GamePage extends JPanel {
+public class GamePage extends JPanel implements KeyListener {
     private JFrame frame;
     String username;
+
+    ScoreUtils scoreQueries = new ScoreUtils();
+    List<Score> allScores = new ArrayList<Score>();
+    List<Integer> userScores = new ArrayList<Integer>();
 
     private final ColorTheme colorTheme;
     private final SudokuModel model;
@@ -35,28 +44,23 @@ public class GamePage extends JPanel {
     private static final int BOARD_WIDTH = 500;
 
     private static final Dimension GAME_SIZE = new Dimension(BOARD_WIDTH + OUTER_MARGIN * 2,
-            BOARD_WIDTH + OUTER_MARGIN * 2 + HEADER_HEIGHT);
+            BOARD_WIDTH + OUTER_MARGIN * 2 + HEADER_HEIGHT + OUTER_MARGIN);
 
     public GamePage(String username) {
         this.username = username;
         this.model = new SudokuModel();
+        this.model.setUsername(username);
         this.colorTheme = new DefaultColorTheme();
-
-        JButton menuButton = new JButton("Menu");
-        menuButton.addActionListener(e -> new MenuPage(username, this));
-        menuButton.setBounds(getWidth() - 90, 10, 80, 30);
-        add(menuButton);
 
         frame = new JFrame("Sudoku Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(GAME_SIZE);
         setBackground(colorTheme.getBackgroundColor());
+        addKeyListener(this);
 
-        // Add this GamePage instance to the frame
         frame.getContentPane().add(this);
         frame.addKeyListener(new Controller(model, this));
 
-        // Make the frame visible
         frame.setVisible(true);
         frame.setResizable(false);
         frame.setLayout(null);
@@ -71,6 +75,10 @@ public class GamePage extends JPanel {
         return model;
     }
 
+    public void launcMenu() {
+        new MenuPage(username, this);
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -79,7 +87,7 @@ public class GamePage extends JPanel {
     }
 
     private void drawGame(Graphics2D g2) {
-        if (model.getGameState() == GameState.WIN) {
+        if (model.getGameState() == GameState.FINISHED) {
             h1(g2, "SOLVED");
             h3(g2, "Press ENTER to restart");
         } else if (model.getGameState() == GameState.WELCOME) {
@@ -96,8 +104,16 @@ public class GamePage extends JPanel {
             }
         } else if (model.getGameState() == GameState.MY_SCORES) {
             h1(g2, "MY SCORES");
+            userScores = scoreQueries.getScoreFromUser(username);
+            for (int i = 0; i < userScores.size(); i++) {
+                h3(g2, "Score: " + userScores.get(i));
+            }
         } else if (model.getGameState() == GameState.HIGHSCORES) {
             h1(g2, "HIGHSCORES");
+            allScores = scoreQueries.getAllScores();
+            for (int i = 0; i < allScores.size(); i++) {
+                h3(g2, "Username: " + allScores.get(i).getUsername() + " Score: " + allScores.get(i).getScore());
+            }
         }
     }
 
@@ -173,6 +189,21 @@ public class GamePage extends JPanel {
     private void h3(Graphics2D g2, String text) {
         g2.setFont(new Font(FONT, Font.PLAIN, Math.min(getWidth() / 30, getHeight() / 30)));
         Inf101Graphics.drawCenteredString(g2, text, 0, 0, getWidth(), getHeight() * 2 - 100);
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            launcMenu();
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
     }
 
 }

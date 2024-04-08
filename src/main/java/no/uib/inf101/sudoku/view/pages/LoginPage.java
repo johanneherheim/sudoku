@@ -40,20 +40,20 @@ public class LoginPage implements ActionListener, KeyListener {
         passwordInput.addKeyListener(this);
         loginButton.addKeyListener(this);
 
-        usernameLabel.setBounds(50, 100, 75, 25);
-        passwordLabel.setBounds(50, 150, 75, 25);
+        usernameLabel.setBounds(50, 50, 75, 25);
+        passwordLabel.setBounds(50, 100, 75, 25);
 
-        messageLabel.setBounds(125, 250, 250, 35);
+        messageLabel.setBounds(125, 200, 250, 35);
         messageLabel.setForeground(Color.RED);
 
-        usernameInput.setBounds(125, 100, 200, 25);
-        passwordInput.setBounds(125, 150, 200, 25);
+        usernameInput.setBounds(125, 50, 200, 25);
+        passwordInput.setBounds(125, 100, 200, 25);
 
-        loginButton.setBounds(125, 200, 100, 25);
+        loginButton.setBounds(125, 150, 100, 25);
         loginButton.addActionListener(this);
         loginButton.setFocusable(false);
 
-        signupButton.setBounds(225, 200, 100, 25);
+        signupButton.setBounds(225, 150, 100, 25);
         signupButton.addActionListener(this);
         signupButton.setFocusable(false);
 
@@ -66,7 +66,7 @@ public class LoginPage implements ActionListener, KeyListener {
         frame.add(signupButton);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600, 800);
+        frame.setSize(400, 250);
         frame.setResizable(false);
         frame.setLayout(null);
         frame.setVisible(true);

@@ -1,13 +1,10 @@
 package no.uib.inf101.sudoku.controller;
 
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import no.uib.inf101.grid.CellPosition;
 import no.uib.inf101.sudoku.model.GameState;
 import no.uib.inf101.sudoku.view.pages.GamePage;
-
-import javax.swing.Timer;
 
 public class Controller implements java.awt.event.KeyListener {
 
@@ -15,15 +12,11 @@ public class Controller implements java.awt.event.KeyListener {
 
     private GamePage view;
 
-    Timer timer;
-
     public Controller(ControllableSudokuModel model, GamePage view) {
         this.model = model;
         this.view = view;
         view.addKeyListener(this);
         view.setFocusable(true);
-        this.timer = new Timer(1000, this::clockTick);
-
     }
 
     @Override
@@ -35,7 +28,6 @@ public class Controller implements java.awt.event.KeyListener {
         if (model.getGameState() == GameState.WELCOME) {
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                 model.setGameState(GameState.PLAYING);
-                timer.start();
             }
         } else if (model.getGameState() == GameState.PLAYING) {
             if (e.getKeyCode() == KeyEvent.VK_UP) {
@@ -83,23 +75,16 @@ public class Controller implements java.awt.event.KeyListener {
                 }
             }
         } else {
-            timer.stop();
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                 model.restart();
             }
         }
+        model.checkIfSolved();
         view.repaint();
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-    }
-
-    public void clockTick(ActionEvent e) {
-        model.checkIfSolved();
-        timer.setDelay(model.getDelay());
-        timer.setInitialDelay(model.getDelay());
-        view.repaint();
     }
 
 }

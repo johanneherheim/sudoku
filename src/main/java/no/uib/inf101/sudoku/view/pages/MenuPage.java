@@ -19,6 +19,7 @@ public class MenuPage implements ActionListener {
     JButton exitButton = new JButton("Avslutt");
     JButton myScoresButton = new JButton("Mine resultat");
     JButton highScoresButton = new JButton("Topplista");
+    JButton backButton = new JButton("Tilbake");
 
     public MenuPage(String username, GamePage gameFrame) {
 
@@ -41,12 +42,17 @@ public class MenuPage implements ActionListener {
         highScoresButton.addActionListener(this);
         highScoresButton.setFocusable(false);
 
+        backButton.setBounds(5, 5, 100, 25);
+        backButton.addActionListener(this);
+        backButton.setFocusable(false);
+
         frame.add(restartButton);
         frame.add(exitButton);
         frame.add(myScoresButton);
         frame.add(highScoresButton);
+        frame.add(backButton);
 
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         frame.setSize(400, 600);
         frame.setResizable(false);
         frame.setLayout(null);
@@ -57,6 +63,7 @@ public class MenuPage implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == restartButton) {
             gameFrame.restart();
+            frame.repaint();
             frame.dispose();
         }
         if (e.getSource() == exitButton) {
@@ -64,13 +71,18 @@ public class MenuPage implements ActionListener {
         }
         if (e.getSource() == myScoresButton) {
             gameFrame.getModel().setGameState(GameState.MY_SCORES);
-            gameFrame.repaint();
+            frame.repaint();
             frame.dispose();
         }
         if (e.getSource() == highScoresButton) {
             gameFrame.getModel().setGameState(GameState.HIGHSCORES);
-            gameFrame.repaint();
+            frame.repaint();
+            frame.dispose();
+        }
+        if (e.getSource() == backButton) {
+            gameFrame.getModel().setGameState(GameState.PLAYING);
             frame.dispose();
         }
     }
+
 }
