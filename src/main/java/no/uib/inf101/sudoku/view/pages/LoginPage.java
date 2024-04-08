@@ -85,11 +85,10 @@ public class LoginPage implements ActionListener, KeyListener {
                     userNotFound = false;
                     if (user.getPassword().equals(hash(password))) {
                         @SuppressWarnings("unused")
-                        WelcomePage welcomePage = new WelcomePage(username);
+                        GamePage gamepage = new GamePage(username);
                         frame.dispose();
                     } else {
                         messageLabel.setText("Feil passord");
-                        usernameInput.setText("");
                         passwordInput.setText("");
                     }
                     break;
@@ -120,11 +119,10 @@ public class LoginPage implements ActionListener, KeyListener {
             } else {
                 userQueries.insertUser(newUsername, hash(newPassword));
                 @SuppressWarnings("unused")
-                WelcomePage welcomePage = new WelcomePage(newUsername);
+                GamePage gamepage = new GamePage(newUsername);
                 frame.dispose();
             }
         }
-
     }
 
     private String hash(String message) {
