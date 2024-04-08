@@ -3,26 +3,17 @@
 1. run this command:
 
 ```bash
-bash scripts/Setup.sh
+source .zshrc
 ```
 
-running this command resets the command above.
+2. run all scripts for setting up with this command
 
 ```bash
-bash scripts/Reset.sh
+setup
 ```
 
-### todo-list
+running this command resets the setup:
 
-- [ ] Legg til grid
-- [ ] Legg til sudokuBoard
-- [ ] Lag sudoku-løysar
-- [ ] Generer sudokuBoard som kan løysast
-- [ ] Legg til sudokuModel
-- [ ] Spelar tapar etter 3 feil
-- [ ] Kan navigera med både mus og piltastar
-- [ ] Legg til timer og poeng, og lagra til database
-- [ ] Side for all time scores
-- [ ] Side for dine resultater
-- [ ] Pause-side med innstillinger
-- [ ] Mørk modus og lys modus
+```bash
+reset
+```
