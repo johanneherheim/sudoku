@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo "Setting up ..."
+
 # Grant executable permissions to the SkipWorktree.sh script
 chmod +x scripts/SkipWorktree.sh
 
