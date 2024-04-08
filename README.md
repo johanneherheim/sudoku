@@ -1,5 +1,19 @@
 # Semesteroppgave 2
 
+1. run this command:
+
+```bash
+bash scripts/Setup.sh
+```
+
+running this command resets the command above.
+
+```bash
+bash scripts/Reset.sh
+```
+
+### todo-list
+
 - [ ] Legg til grid
 - [ ] Legg til sudokuBoard
 - [ ] Lag sudoku-løysar
