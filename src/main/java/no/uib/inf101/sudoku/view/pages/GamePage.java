@@ -7,6 +7,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -14,7 +15,6 @@ import no.uib.inf101.grid.GridCell;
 import no.uib.inf101.sudoku.controller.Controller;
 import no.uib.inf101.sudoku.model.GameState;
 import no.uib.inf101.sudoku.model.SudokuModel;
-import no.uib.inf101.sudoku.view.ViewableSudokuModel;
 import no.uib.inf101.sudoku.view.colorthemes.ColorTheme;
 import no.uib.inf101.sudoku.view.colorthemes.DefaultColorTheme;
 import no.uib.inf101.sudoku.view.tools.CellPositionToPixelConverter;
@@ -25,7 +25,7 @@ public class GamePage extends JPanel {
     String username;
 
     private final ColorTheme colorTheme;
-    private final ViewableSudokuModel model;
+    private final SudokuModel model;
 
     private static final String FONT = "Helvetica Neue";
 
@@ -42,6 +42,11 @@ public class GamePage extends JPanel {
         this.model = new SudokuModel();
         this.colorTheme = new DefaultColorTheme();
 
+        JButton menuButton = new JButton("Menu");
+        menuButton.addActionListener(e -> new MenuPage(username, this));
+        menuButton.setBounds(getWidth() - 90, 10, 80, 30);
+        add(menuButton);
+
         frame = new JFrame("Sudoku Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(GAME_SIZE);
@@ -49,10 +54,21 @@ public class GamePage extends JPanel {
 
         // Add this GamePage instance to the frame
         frame.getContentPane().add(this);
-        frame.addKeyListener(new Controller((SudokuModel) model, this));
+        frame.addKeyListener(new Controller(model, this));
 
         // Make the frame visible
         frame.setVisible(true);
+        frame.setResizable(false);
+        frame.setLayout(null);
+    }
+
+    public void restart() {
+        model.restart();
+        repaint();
+    }
+
+    public SudokuModel getModel() {
+        return model;
     }
 
     @Override
@@ -78,6 +94,10 @@ public class GamePage extends JPanel {
             for (GridCell cell : model.getAllTiles()) {
                 drawCell(g2, cell, converter);
             }
+        } else if (model.getGameState() == GameState.MY_SCORES) {
+            h1(g2, "MY SCORES");
+        } else if (model.getGameState() == GameState.HIGHSCORES) {
+            h1(g2, "HIGHSCORES");
         }
     }
 

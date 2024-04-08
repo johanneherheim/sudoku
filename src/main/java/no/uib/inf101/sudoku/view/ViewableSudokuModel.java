@@ -35,5 +35,4 @@ public interface ViewableSudokuModel {
     void restart();
 
     long getTimeElapsed();
-
 }

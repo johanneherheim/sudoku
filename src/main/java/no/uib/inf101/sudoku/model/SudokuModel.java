@@ -106,10 +106,12 @@ public class SudokuModel implements ViewableSudokuModel, ControllableSudokuModel
 
     @Override
     public void restart() {
+        generator = new Generator();
         generator.generateBoard();
         board = new SudokuBoard(generator.getPlayableBoard(), generator.getSolvedBoard());
         gameState = GameState.PLAYING;
         count = 0;
+        startTimeMillis = System.currentTimeMillis();
     }
 
     @Override
