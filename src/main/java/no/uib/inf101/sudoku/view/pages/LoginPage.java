@@ -43,7 +43,7 @@ public class LoginPage implements ActionListener, KeyListener {
         usernameLabel.setBounds(50, 50, 75, 25);
         passwordLabel.setBounds(50, 100, 75, 25);
 
-        messageLabel.setBounds(125, 200, 250, 35);
+        messageLabel.setBounds(125, 175, 250, 35);
         messageLabel.setForeground(Color.RED);
 
         usernameInput.setBounds(125, 50, 200, 25);
