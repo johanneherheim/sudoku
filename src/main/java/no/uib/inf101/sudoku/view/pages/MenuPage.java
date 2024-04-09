@@ -13,7 +13,7 @@ public class MenuPage implements ActionListener {
     String username;
     GamePage gameFrame;
 
-    JFrame frame = new JFrame();
+    JFrame menuFrame = new JFrame();
 
     JButton restartButton = new JButton("Nytt spel");
     JButton exitButton = new JButton("Avslutt");
@@ -46,43 +46,44 @@ public class MenuPage implements ActionListener {
         backButton.addActionListener(this);
         backButton.setFocusable(false);
 
-        frame.add(restartButton);
-        frame.add(exitButton);
-        frame.add(myScoresButton);
-        frame.add(highScoresButton);
-        frame.add(backButton);
+        menuFrame.add(restartButton);
+        menuFrame.add(exitButton);
+        menuFrame.add(myScoresButton);
+        menuFrame.add(highScoresButton);
+        menuFrame.add(backButton);
 
-        frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        frame.setSize(400, 600);
-        frame.setResizable(false);
-        frame.setLayout(null);
-        frame.setVisible(true);
+        menuFrame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        menuFrame.setSize(400, 600);
+        menuFrame.setResizable(false);
+        menuFrame.setLayout(null);
+        menuFrame.setVisible(true);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == restartButton) {
             gameFrame.restart();
-            frame.repaint();
-            frame.dispose();
+            menuFrame.repaint();
+            menuFrame.dispose();
         }
         if (e.getSource() == exitButton) {
             System.exit(0);
         }
         if (e.getSource() == myScoresButton) {
             gameFrame.getModel().setGameState(GameState.MY_SCORES);
-            frame.repaint();
-            frame.dispose();
+            menuFrame.repaint();
+            menuFrame.dispose();
         }
         if (e.getSource() == highScoresButton) {
             gameFrame.getModel().setGameState(GameState.HIGHSCORES);
-            frame.repaint();
-            frame.dispose();
+            menuFrame.repaint();
+            menuFrame.dispose();
         }
         if (e.getSource() == backButton) {
             gameFrame.getModel().setGameState(GameState.PLAYING);
-            frame.dispose();
+            menuFrame.dispose();
         }
+        gameFrame.repaint();
     }
 
 }
