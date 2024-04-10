@@ -12,6 +12,12 @@ source .zshrc
 setup
 ```
 
+3. push the changes to github and gitlab
+
+```bash
+push
+```
+
 running this command resets the setup:
 
 ```bash
