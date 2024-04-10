@@ -1,16 +1,20 @@
 package no.uib.inf101.sudoku.view.pages;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -46,6 +50,8 @@ public class GamePage extends JPanel implements KeyListener {
     private static final Dimension GAME_SIZE = new Dimension(BOARD_WIDTH + OUTER_MARGIN * 2,
             BOARD_WIDTH + OUTER_MARGIN * 2 + HEADER_HEIGHT + OUTER_MARGIN);
 
+    JButton startButton;
+
     public GamePage(String username) {
         this.username = username;
         this.model = new SudokuModel();
@@ -61,9 +67,31 @@ public class GamePage extends JPanel implements KeyListener {
         frame.getContentPane().add(this);
         frame.addKeyListener(new Controller(model, this));
 
+        startButton = new JButton("Start");
+        startButton.setBounds(10, 10, 80, 30); // Set position and size of the button
+        startButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                startGame(); // Call method to start the game
+            }
+        });
+        frame.add(startButton);
         frame.setVisible(true);
         frame.setResizable(false);
-        frame.setLayout(null);
+        frame.setLayout(new BorderLayout());
+        frame.getContentPane().add(this, BorderLayout.CENTER);
+        frame.getContentPane().add(startButton, BorderLayout.NORTH);
+    }
+
+    private void startGame() {
+        model.setGameState(GameState.PLAYING);
+        model.restart();
+        requestFocus(); // Ensure panel gets focus
+        repaint();
+
+        // Remove the start button from the frame
+        frame.remove(startButton);
+        frame.revalidate(); // Revalidate the frame to reflect the changes
     }
 
     public void restart() {
@@ -90,9 +118,6 @@ public class GamePage extends JPanel implements KeyListener {
         if (model.getGameState() == GameState.FINISHED) {
             h1(g2, "SOLVED");
             h3(g2, "Press ENTER to restart");
-        } else if (model.getGameState() == GameState.WELCOME) {
-            h1(g2, "WELCOME");
-            h2(g2, "Press ENTER to start");
         } else if (model.getGameState() == GameState.PLAYING) {
             CellPositionToPixelConverter converter = new CellPositionToPixelConverter(
                     getBoardCanvas(), model.getDimension(), INNER_MARGIN);
