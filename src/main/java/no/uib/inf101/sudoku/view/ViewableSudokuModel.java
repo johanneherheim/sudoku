@@ -26,13 +26,7 @@ public interface ViewableSudokuModel {
 
     void setSelectedCell(CellPosition cell);
 
-    Integer getCount();
-
-    Integer getDelay();
-
-    void checkIfSolved();
+    boolean isSolved();
 
     void restart();
-
-    long getTimeElapsed();
 }

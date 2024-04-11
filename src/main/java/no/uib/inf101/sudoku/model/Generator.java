@@ -19,7 +19,7 @@ public class Generator {
 
     public void generateBoard() {
         fillBoard(0, 0);
-        makeBoardPlayable(getDifficulty());
+        makeBoardPlayable(getDifficulty(difficulty));
     }
 
     private boolean fillBoard(int row, int col) {
@@ -86,7 +86,7 @@ public class Generator {
         return playableBoard;
     }
 
-    public Integer getDifficulty() {
+    public Integer getDifficulty(Difficulty difficulty) {
         if (difficulty == Difficulty.EASY) {
             return 1;
         } else if (difficulty == Difficulty.MEDIUM) {

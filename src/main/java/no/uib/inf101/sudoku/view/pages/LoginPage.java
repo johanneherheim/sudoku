@@ -65,6 +65,7 @@ public class LoginPage implements ActionListener, KeyListener {
         frame.add(loginButton);
         frame.add(signupButton);
 
+        frame.setTitle("Logg inn");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 250);
         frame.setResizable(false);
@@ -84,8 +85,9 @@ public class LoginPage implements ActionListener, KeyListener {
                 if (user.getUsername().equals(username)) {
                     userNotFound = false;
                     if (user.getPassword().equals(hash(password))) {
-                        @SuppressWarnings("unused")
-                        GamePage gamepage = new GamePage(username);
+
+                        launchGame(username);
+
                         frame.dispose();
                     } else {
                         messageLabel.setText("Feil passord");
@@ -118,11 +120,19 @@ public class LoginPage implements ActionListener, KeyListener {
                 messageLabel.setText("Brukarnamnet er allerede i bruk");
             } else {
                 userQueries.insertUser(newUsername, hash(newPassword));
-                @SuppressWarnings("unused")
-                GamePage gamepage = new GamePage(newUsername);
+
+                launchGame(newUsername);
+
                 frame.dispose();
             }
         }
+    }
+
+    private void launchGame(String username) {
+        GameView gameView = new GameView(username);
+        System.out.println("Launching game for user: " + username);
+        gameView.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        gameView.setVisible(true);
     }
 
     private String hash(String message) {

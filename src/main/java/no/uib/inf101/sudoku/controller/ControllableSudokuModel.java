@@ -23,9 +23,7 @@ public interface ControllableSudokuModel {
 
     void setSelectedCell(CellPosition cell);
 
-    Integer getDelay();
-
-    void checkIfSolved();
+    boolean isSolved();
 
     void restart();
 }

@@ -12,21 +12,18 @@ public class SudokuModel implements ViewableSudokuModel, ControllableSudokuModel
     private static Generator generator;
     private static Integer currentNumber = 1;
     private static CellPosition selectedCell;
-    private Integer count;
     private GameState gameState;
-    private long startTimeMillis;
     private ScoreUtils scoreQueries = new ScoreUtils();
-    String username;
-    Difficulty difficulty = Difficulty.EASY;
+    private String username;
+    Difficulty difficulty;
 
-    public SudokuModel() {
+    public SudokuModel(String username) {
+        this.difficulty = Difficulty.EASY;
+        this.username = username;
         generator = new Generator(difficulty);
         generator.generateBoard();
         board = new SudokuBoard(generator.getPlayableBoard(), generator.getSolvedBoard());
-        gameState = GameState.WELCOME;
-        startTimeMillis = System.currentTimeMillis();
         selectedCell = new CellPosition(0, 0);
-        count = 0;
     }
 
     @Override
@@ -52,7 +49,6 @@ public class SudokuModel implements ViewableSudokuModel, ControllableSudokuModel
     @Override
     public void setGameState(GameState gameState) {
         if (gameState == GameState.PLAYING) {
-            startTimeMillis = System.currentTimeMillis();
         }
         this.gameState = gameState;
     }
@@ -67,7 +63,7 @@ public class SudokuModel implements ViewableSudokuModel, ControllableSudokuModel
         currentNumber = number;
         board.setNumber(selectedCell, number);
         if (!board.isGiven(selectedCell.row(), selectedCell.col())) {
-            count++;
+            // do something
         }
     }
 
@@ -82,45 +78,26 @@ public class SudokuModel implements ViewableSudokuModel, ControllableSudokuModel
     }
 
     @Override
-    public void checkIfSolved() {
+    public boolean isSolved() {
         for (int row = 0; row < board.getRows(); row++) {
             for (int col = 0; col < board.getCols(); col++) {
                 if (generator.getSolvedBoard()[row][col] != board.getNumber(row, col)) {
-                    return;
+                    return false;
                 }
             }
         }
-        if (gameState != GameState.FINISHED) {
-            scoreQueries.insertScore(username, count, getTimeElapsed(), 0, 0, generator.getPlayableBoard(),
-                    generator.getSolvedBoard(), generator.getDifficulty());
-        }
+
+        scoreQueries.insertScore(username, 0, 0, 0, 0, generator.getPlayableBoard(),
+                generator.getSolvedBoard(), generator.getDifficulty(difficulty));
+
         gameState = GameState.FINISHED;
+        return true;
     }
 
     @Override
     public void restart() {
-        generator = new Generator(difficulty);
-        generator.generateBoard();
-        board = new SudokuBoard(generator.getPlayableBoard(), generator.getSolvedBoard());
+
         gameState = GameState.PLAYING;
-        count = 0;
-        startTimeMillis = System.currentTimeMillis();
-    }
-
-    @Override
-    public Integer getCount() {
-        return count;
-    }
-
-    @Override
-    public Integer getDelay() {
-        return 1000;
-    }
-
-    @Override
-    public long getTimeElapsed() {
-        long currentTimeMillis = System.currentTimeMillis();
-        return currentTimeMillis - startTimeMillis;
     }
 
     public void setUsername(String username) {
@@ -129,5 +106,8 @@ public class SudokuModel implements ViewableSudokuModel, ControllableSudokuModel
 
     public void setDifficulty(Difficulty difficulty) {
         this.difficulty = difficulty;
+        generator = new Generator(difficulty);
+        generator.generateBoard();
+        board = new SudokuBoard(generator.getPlayableBoard(), generator.getSolvedBoard());
     }
 }
