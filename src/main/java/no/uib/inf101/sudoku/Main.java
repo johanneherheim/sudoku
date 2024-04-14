@@ -1,6 +1,6 @@
 package no.uib.inf101.sudoku;
 
-import no.uib.inf101.sudoku.view.pages.LoginPage;
+import no.uib.inf101.sudoku.view.LoginPage;
 
 public class Main {
 

@@ -15,8 +15,6 @@ public interface ControllableSudokuModel {
 
     void setGameState(GameState gameState);
 
-    Integer getCurrentNumber();
-
     void giveNumberToCell(Integer number);
 
     CellPosition getSelectedCell();
@@ -24,6 +22,4 @@ public interface ControllableSudokuModel {
     void setSelectedCell(CellPosition cell);
 
     boolean isSolved();
-
-    void restart();
 }

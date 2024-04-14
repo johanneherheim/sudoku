@@ -5,8 +5,11 @@ import no.uib.inf101.grid.GridCell;
 
 public class SudokuBoard extends Grid {
 
+    int[][] solution;
+
     public SudokuBoard(int[][] playableBoard, int[][] solution) {
         super(playableBoard.length, playableBoard[0].length, playableBoard, solution);
+        this.solution = solution;
     }
 
     /**

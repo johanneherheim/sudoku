@@ -18,8 +18,6 @@ public interface ViewableSudokuModel {
 
     void setGameState(GameState gameState);
 
-    Integer getCurrentNumber();
-
     void giveNumberToCell(Integer number);
 
     CellPosition getSelectedCell();
@@ -27,6 +25,4 @@ public interface ViewableSudokuModel {
     void setSelectedCell(CellPosition cell);
 
     boolean isSolved();
-
-    void restart();
 }

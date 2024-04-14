@@ -1,4 +1,4 @@
-package no.uib.inf101.sudoku.view.pages;
+package no.uib.inf101.sudoku.view;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;

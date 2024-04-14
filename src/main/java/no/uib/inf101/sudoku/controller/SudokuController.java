@@ -4,7 +4,7 @@ import java.awt.event.KeyEvent;
 
 import no.uib.inf101.grid.CellPosition;
 import no.uib.inf101.sudoku.model.GameState;
-import no.uib.inf101.sudoku.view.pages.GameView;
+import no.uib.inf101.sudoku.view.GameView;
 
 public class SudokuController implements java.awt.event.KeyListener {
 
@@ -68,9 +68,6 @@ public class SudokuController implements java.awt.event.KeyListener {
             } else if (e.getKeyCode() == KeyEvent.VK_0) {
                 model.giveNumberToCell(0);
             }
-        }
-        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-            model.restart();
         }
         System.out.println("Key pressed: " + e.getKeyCode());
         System.out.println("Selected cell: " + model.getSelectedCell());

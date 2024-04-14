@@ -3,31 +3,26 @@ package no.uib.inf101.sudoku.view.colorthemes;
 import java.awt.Color;
 
 import no.uib.inf101.grid.CellPosition;
+import no.uib.inf101.grid.GridCell;
 
 public class DefaultColorTheme implements ColorTheme {
 
     @Override
-    public Color getCellColor(boolean isCorrect, boolean isGiven, Integer number, CellPosition cellPosition,
-            CellPosition selectedCell) {
-        if (!isCorrect) {
+    public Color getCellColor(GridCell cell, CellPosition selectedCell) {
+        if (!cell.isCorrect()) {
             return new Color(204, 76, 97);
         }
-        if (cellPosition.row() == selectedCell.row() && cellPosition.col() == selectedCell.col()) {
+        if (cell.pos().row() == selectedCell.row() && cell.pos().col() == selectedCell.col()) {
             return new Color(31, 31, 31);
-        } else if (cellPosition.col() < 3 && cellPosition.row() < 3 || cellPosition.col() > 5 && cellPosition.row() < 3
-                || cellPosition.col() < 3 && cellPosition.row() > 5
-                || cellPosition.col() > 5 && cellPosition.row() > 5
-                || cellPosition.col() > 2 && cellPosition.col() < 6 && cellPosition.row() > 2
-                        && cellPosition.row() < 6) {
-            return new Color(51, 51, 51);
+        } else if (cell.pos().col() < 3 && cell.pos().row() < 3 || cell.pos().col() > 5 && cell.pos().row() < 3
+                || cell.pos().col() < 3 && cell.pos().row() > 5
+                || cell.pos().col() > 5 && cell.pos().row() > 5
+                || cell.pos().col() > 2 && cell.pos().col() < 6 && cell.pos().row() > 2
+                        && cell.pos().row() < 6) {
+            return new Color(45, 45, 45);
         } else {
-            return new Color(41, 41, 41);
+            return new Color(35, 35, 35);
         }
-    }
-
-    @Override
-    public Color getGridColor() {
-        return Color.BLACK;
     }
 
     @Override
@@ -38,11 +33,6 @@ public class DefaultColorTheme implements ColorTheme {
     @Override
     public Color getTextColor() {
         return Color.LIGHT_GRAY;
-    }
-
-    @Override
-    public Color getButtonColor(Integer number, Integer currentNumber) {
-        return (number + 1 == currentNumber ? new Color(31, 31, 31) : new Color(51, 51, 51));
     }
 
 }

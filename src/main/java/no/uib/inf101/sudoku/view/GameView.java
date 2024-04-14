@@ -1,4 +1,4 @@
-package no.uib.inf101.sudoku.view.pages;
+package no.uib.inf101.sudoku.view;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -186,7 +186,7 @@ public class GameView extends JFrame implements ActionListener {
             g2.setColor(colorTheme.getTextColor());
             g2.draw(cellBounds);
         }
-        g2.setColor(colorTheme.getCellColor(cell.isCorrect(), cell.isGiven(), cell.number(), cell.pos(),
+        g2.setColor(colorTheme.getCellColor(cell,
                 model.getSelectedCell()));
         g2.fill(cellBounds);
         g2.setColor(colorTheme.getTextColor());
@@ -214,44 +214,54 @@ public class GameView extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == easyButton) {
-            model.setDifficulty(Difficulty.EASY);
+            model.start(Difficulty.EASY);
+            model.setGameState(GameState.PLAYING);
             cardLayout.show(cardPanel, "2");
             System.out.println("Easy");
         } else if (e.getSource() == mediumButton) {
-            model.setDifficulty(Difficulty.MEDIUM);
+            model.start(Difficulty.MEDIUM);
+            model.setGameState(GameState.PLAYING);
             cardLayout.show(cardPanel, "2");
             System.out.println("Medium");
         } else if (e.getSource() == hardButton) {
-            model.setDifficulty(Difficulty.HARD);
+            model.start(Difficulty.HARD);
+            model.setGameState(GameState.PLAYING);
             cardLayout.show(cardPanel, "2");
             System.out.println("Hard");
         } else if (e.getSource() == pauseButton) {
+            model.setGameState(GameState.PAUSED);
             cardLayout.show(cardPanel, "3");
             System.out.println("Pause");
         } else if (e.getSource() == resumeButton) {
+            model.setGameState(GameState.PLAYING);
             cardLayout.show(cardPanel, "2");
             System.out.println("Resume");
         } else if (e.getSource() == restartButton) {
+            model.setGameState(GameState.PLAYING);
             cardLayout.show(cardPanel, "1");
             System.out.println("Restart");
         } else if (e.getSource() == exitButton) {
             System.exit(0);
         } else if (e.getSource() == myScoresButton) {
+            model.setGameState(GameState.MY_SCORES);
             cardLayout.show(cardPanel, "5");
             System.out.println("My Scores");
         } else if (e.getSource() == highScoresButton) {
+            model.setGameState(GameState.LEADERBOARD);
             cardLayout.show(cardPanel, "6");
             System.out.println("Leaderboard");
         } else if (e.getSource() == backFromScoresButton) {
+            model.setGameState(GameState.PAUSED);
             cardLayout.show(cardPanel, "3");
             System.out.println("Back from Scores");
         } else if (e.getSource() == backFromLeaderboardButton) {
+            model.setGameState(GameState.PAUSED);
             cardLayout.show(cardPanel, "3");
             System.out.println("Back from Leaderboard");
         } else if (e.getSource() == backFromGameoverButton) {
+            model.setGameState(GameState.WELCOME);
             cardLayout.show(cardPanel, "1");
             System.out.println("Back from Gameover");
-            model.restart();
         }
     }
 }

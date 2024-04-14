@@ -3,17 +3,14 @@ package no.uib.inf101.sudoku.view.colorthemes;
 import java.awt.Color;
 
 import no.uib.inf101.grid.CellPosition;
+import no.uib.inf101.grid.GridCell;
 
 public interface ColorTheme {
 
-    Color getCellColor(boolean isCorrect, boolean isGiven, Integer number, CellPosition cellPosition,
-            CellPosition selectedCell);
-
-    Color getGridColor();
+    Color getCellColor(GridCell cell, CellPosition selectedCell);
 
     Color getBackgroundColor();
 
     Color getTextColor();
 
-    Color getButtonColor(Integer number, Integer currentNumber);
 }

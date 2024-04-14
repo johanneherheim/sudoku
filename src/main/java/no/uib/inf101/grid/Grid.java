@@ -11,15 +11,21 @@ public class Grid implements IGrid {
     private ArrayList<GridCell> cells = new ArrayList<GridCell>();
 
     private int[][] solution;
+    private int[][] startValues;
 
     public Grid(int rows, int cols, int[][] startValues, int[][] solution) {
         this.rows = rows;
         this.cols = cols;
+        this.startValues = startValues;
         this.solution = solution;
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
-                cells.add(new GridCell(new CellPosition(row, col), startValues[row][col], true,
-                        startValues[row][col] != 0));
+                if (startValues[row][col] == 0) {
+                    cells.add(new GridCell(new CellPosition(row, col), startValues[row][col], false, false));
+                } else {
+                    cells.add(new GridCell(new CellPosition(row, col), startValues[row][col], true, true));
+
+                }
             }
         }
     }
@@ -71,6 +77,14 @@ public class Grid implements IGrid {
     @Override
     public boolean isGiven(int row, int col) {
         return cells.get(row * cols + col).isGiven();
+    }
+
+    public int[][] getSolution() {
+        return this.solution;
+    }
+
+    public int[][] getStartValues() {
+        return this.startValues;
     }
 
 }
