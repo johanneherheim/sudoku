@@ -13,7 +13,7 @@ public class LightColorTheme implements ColorTheme {
             return new Color(255, 180, 180); // Light red
         }
         if (cell.pos().row() == selectedCell.row() && cell.pos().col() == selectedCell.col()) {
-            return new Color(200, 200, 255); // Light blue
+            return new Color(200, 200, 200); // Light blue
         } else if (cell.pos().col() < 3 && cell.pos().row() < 3 || cell.pos().col() > 5 && cell.pos().row() < 3
                 || cell.pos().col() < 3 && cell.pos().row() > 5
                 || cell.pos().col() > 5 && cell.pos().row() > 5
