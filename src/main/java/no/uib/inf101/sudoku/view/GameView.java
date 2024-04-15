@@ -14,6 +14,7 @@ import no.uib.inf101.sudoku.model.Score;
 import no.uib.inf101.sudoku.model.SudokuModel;
 import no.uib.inf101.sudoku.view.colorthemes.ColorTheme;
 import no.uib.inf101.sudoku.view.colorthemes.DefaultColorTheme;
+import no.uib.inf101.sudoku.view.colorthemes.LightColorTheme;
 import no.uib.inf101.sudoku.view.tools.CellPositionToPixelConverter;
 import no.uib.inf101.sudoku.view.tools.Inf101Graphics;
 
@@ -33,6 +34,7 @@ public class GameView extends JFrame implements ActionListener {
 
     private SudokuModel model;
     private ColorTheme colorTheme;
+    private boolean isDefaultColorTheme;
     private String username;
 
     private Timer timer;
@@ -57,6 +59,18 @@ public class GameView extends JFrame implements ActionListener {
     JButton backFromScoresButton = new JButton("Tilbake");
     JButton backFromLeaderboardButton = new JButton("Tilbake");
     JButton backFromGameoverButton = new JButton("Nytt spill");
+    JButton toggleLightModeButton = new JButton("🌞");
+
+    JPanel welcomeScreen = new JPanel(null);
+    JPanel playingScreen = new JPanel(null);
+    JPanel pauseScreen = new JPanel(null);
+    JPanel gameoverScreen = new JPanel(null);
+    JPanel highScoresScreen = new JPanel(null);
+    JPanel leaderboardScreen = new JPanel(null);
+
+    GamePanel gamePanel = new GamePanel();
+    GamePanel higscorePanel = new GamePanel();
+    GamePanel leaderboardPanel = new GamePanel();
 
     public GameView(String username) {
         this.username = username;
@@ -70,13 +84,7 @@ public class GameView extends JFrame implements ActionListener {
         cardPanel = new JPanel();
         cardPanel.setLayout(cardLayout);
         colorTheme = new DefaultColorTheme();
-
-        JPanel welcomeScreen = new JPanel(null);
-        JPanel playingScreen = new JPanel(null);
-        JPanel pauseScreen = new JPanel(null);
-        JPanel gameoverScreen = new JPanel(null);
-        JPanel highScoresScreen = new JPanel(null);
-        JPanel leaderboardScreen = new JPanel(null);
+        isDefaultColorTheme = true;
 
         welcomeScreen.setBackground(colorTheme.getBackgroundColor());
         playingScreen.setBackground(colorTheme.getBackgroundColor());
@@ -107,6 +115,7 @@ public class GameView extends JFrame implements ActionListener {
         backFromScoresButton.addActionListener(this);
         backFromLeaderboardButton.addActionListener(this);
         backFromGameoverButton.addActionListener(this);
+        toggleLightModeButton.addActionListener(this);
 
         welcomeText.setBounds(getWidth() / 2 - 180, 50, 400, 50);
         easyButton.setBounds(getWidth() / 2 - 75, 200, 150, 50);
@@ -120,6 +129,7 @@ public class GameView extends JFrame implements ActionListener {
         pauseButton.setBounds(10, 10, 70, 30);
         playingScreen.add(pauseButton);
 
+        toggleLightModeButton.setBounds(getWidth() - 50, 10, 40, 30);
         pauseText.setBounds(getWidth() / 2 - 80, 50, 200, 50);
         restartButton.setBounds(getWidth() / 2 - 75, 200, 150, 50);
         highScoresButton.setBounds(getWidth() / 2 - 75, 275, 150, 50);
@@ -134,6 +144,7 @@ public class GameView extends JFrame implements ActionListener {
         pauseScreen.add(myScoresButton);
         pauseScreen.add(highScoresButton);
         pauseScreen.add(resumeButton);
+        pauseScreen.add(toggleLightModeButton);
 
         gameoverText.setBounds(getWidth() / 2 - 85, 50, 200, 50);
         backFromGameoverButton.setBounds(getWidth() / 2 - 75, 275, 150, 50);
@@ -154,19 +165,16 @@ public class GameView extends JFrame implements ActionListener {
         cardPanel.add(leaderboardScreen, "6");
         playingScreen.setFocusable(true);
 
-        GamePanel gamePanel = new GamePanel();
         gamePanel.setBounds(0, 0, BOARD_WIDTH + OUTER_MARGIN * 2,
                 BOARD_WIDTH + OUTER_MARGIN * 2 + HEADER_HEIGHT + OUTER_MARGIN);
         playingScreen.add(gamePanel);
         gamePanel.setBackground(colorTheme.getBackgroundColor());
 
-        GamePanel higscorePanel = new GamePanel();
         higscorePanel.setBounds(0, 0, BOARD_WIDTH + OUTER_MARGIN * 2,
                 BOARD_WIDTH + OUTER_MARGIN * 2 + HEADER_HEIGHT + OUTER_MARGIN);
         highScoresScreen.add(higscorePanel);
         higscorePanel.setBackground(colorTheme.getBackgroundColor());
 
-        GamePanel leaderboardPanel = new GamePanel();
         leaderboardPanel.setBounds(0, 0, BOARD_WIDTH + OUTER_MARGIN * 2,
                 BOARD_WIDTH + OUTER_MARGIN * 2 + HEADER_HEIGHT + OUTER_MARGIN);
         leaderboardScreen.add(leaderboardPanel);
@@ -393,6 +401,9 @@ public class GameView extends JFrame implements ActionListener {
             model.setGameState(GameState.WELCOME);
             cardLayout.show(cardPanel, "1");
             System.out.println("Back from Gameover");
+        } else if (e.getSource() == toggleLightModeButton) {
+            toggleLightMode();
+            repaint();
         }
     }
 
@@ -400,5 +411,41 @@ public class GameView extends JFrame implements ActionListener {
         scoreQueries = new ScoreUtils();
         allScores = scoreQueries.getAllScores();
         userScores = scoreQueries.getScoreFromUser(username);
+    }
+
+    public void toggleLightMode() {
+        if (isDefaultColorTheme) {
+            colorTheme = new LightColorTheme();
+            isDefaultColorTheme = false;
+            toggleLightModeButton.setText("🌙");
+            welcomeScreen.setBackground(colorTheme.getBackgroundColor());
+            playingScreen.setBackground(colorTheme.getBackgroundColor());
+            pauseScreen.setBackground(colorTheme.getBackgroundColor());
+            gameoverScreen.setBackground(colorTheme.getBackgroundColor());
+            highScoresScreen.setBackground(colorTheme.getBackgroundColor());
+            leaderboardScreen.setBackground(colorTheme.getBackgroundColor());
+            gamePanel.setBackground(colorTheme.getBackgroundColor());
+            higscorePanel.setBackground(colorTheme.getBackgroundColor());
+            leaderboardPanel.setBackground(colorTheme.getBackgroundColor());
+            setBackground(colorTheme.getBackgroundColor());
+            repaint();
+            revalidate();
+        } else {
+            colorTheme = new DefaultColorTheme();
+            isDefaultColorTheme = true;
+            toggleLightModeButton.setText("🌞");
+            welcomeScreen.setBackground(colorTheme.getBackgroundColor());
+            playingScreen.setBackground(colorTheme.getBackgroundColor());
+            pauseScreen.setBackground(colorTheme.getBackgroundColor());
+            gameoverScreen.setBackground(colorTheme.getBackgroundColor());
+            highScoresScreen.setBackground(colorTheme.getBackgroundColor());
+            leaderboardScreen.setBackground(colorTheme.getBackgroundColor());
+            gamePanel.setBackground(colorTheme.getBackgroundColor());
+            higscorePanel.setBackground(colorTheme.getBackgroundColor());
+            leaderboardPanel.setBackground(colorTheme.getBackgroundColor());
+            setBackground(colorTheme.getBackgroundColor());
+            repaint();
+            revalidate();
+        }
     }
 }
