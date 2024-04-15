@@ -3,11 +3,14 @@ package no.uib.inf101.sudoku.view;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Rectangle2D;
+import java.util.List;
 import javax.swing.*;
 import no.uib.inf101.grid.GridCell;
 import no.uib.inf101.sudoku.controller.SudokuController;
+import no.uib.inf101.sudoku.dao.ScoreUtils;
 import no.uib.inf101.sudoku.model.Difficulty;
 import no.uib.inf101.sudoku.model.GameState;
+import no.uib.inf101.sudoku.model.Score;
 import no.uib.inf101.sudoku.model.SudokuModel;
 import no.uib.inf101.sudoku.view.colorthemes.ColorTheme;
 import no.uib.inf101.sudoku.view.colorthemes.DefaultColorTheme;
@@ -30,6 +33,14 @@ public class GameView extends JFrame implements ActionListener {
 
     private SudokuModel model;
     private ColorTheme colorTheme;
+    private String username;
+
+    private Timer timer;
+    private int secondsPassed;
+
+    private ScoreUtils scoreQueries = new ScoreUtils();
+    private List<Score> allScores;
+    private List<Score> userScores;
 
     @SuppressWarnings("unused")
     private SudokuController controller;
@@ -48,8 +59,11 @@ public class GameView extends JFrame implements ActionListener {
     JButton backFromGameoverButton = new JButton("Nytt spill");
 
     public GameView(String username) {
+        this.username = username;
         this.model = new SudokuModel(username);
         this.controller = new SudokuController(model, this);
+        allScores = scoreQueries.getAllScores();
+        userScores = scoreQueries.getScoreFromUser(username);
         setTitle("Sudoku");
         setSize(GAME_SIZE);
         cardLayout = new CardLayout();
@@ -71,21 +85,15 @@ public class GameView extends JFrame implements ActionListener {
         highScoresScreen.setBackground(colorTheme.getBackgroundColor());
         leaderboardScreen.setBackground(colorTheme.getBackgroundColor());
 
-        JLabel welcomeText = new JLabel("Velg vanskelighetsgrad!");
-        JLabel pauseText = new JLabel("pause");
-        JLabel gameoverText = new JLabel("gameover");
-        JLabel highScoresText = new JLabel("Dine resultater");
-        JLabel leaderboardText = new JLabel("Leaderboard");
+        JLabel welcomeText = new JLabel("VANSKELEGHEITSGRAD:");
+        JLabel pauseText = new JLabel("PAUSE");
+        JLabel gameoverText = new JLabel("BRA JOBBA!");
         welcomeText.setForeground(colorTheme.getTextColor());
         pauseText.setForeground(colorTheme.getTextColor());
         gameoverText.setForeground(colorTheme.getTextColor());
-        highScoresText.setForeground(colorTheme.getTextColor());
-        leaderboardText.setForeground(colorTheme.getTextColor());
-        welcomeText.setFont(new Font(FONT, Font.BOLD, 20));
-        pauseText.setFont(new Font(FONT, Font.BOLD, 20));
-        gameoverText.setFont(new Font(FONT, Font.BOLD, 20));
-        highScoresText.setFont(new Font(FONT, Font.BOLD, 20));
-        leaderboardText.setFont(new Font(FONT, Font.BOLD, 20));
+        welcomeText.setFont(new Font(FONT, Font.BOLD, 30));
+        pauseText.setFont(new Font(FONT, Font.BOLD, 50));
+        gameoverText.setFont(new Font(FONT, Font.BOLD, 30));
 
         easyButton.addActionListener(this);
         mediumButton.addActionListener(this);
@@ -100,10 +108,10 @@ public class GameView extends JFrame implements ActionListener {
         backFromLeaderboardButton.addActionListener(this);
         backFromGameoverButton.addActionListener(this);
 
-        welcomeText.setBounds(50, 50, 300, 30);
-        easyButton.setBounds(50, 100, 100, 30);
-        mediumButton.setBounds(50, 150, 100, 30);
-        hardButton.setBounds(50, 200, 100, 30);
+        welcomeText.setBounds(getWidth() / 2 - 180, 50, 400, 50);
+        easyButton.setBounds(getWidth() / 2 - 75, 200, 150, 50);
+        mediumButton.setBounds(getWidth() / 2 - 75, 275, 150, 50);
+        hardButton.setBounds(getWidth() / 2 - 75, 350, 150, 50);
         welcomeScreen.add(welcomeText);
         welcomeScreen.add(easyButton);
         welcomeScreen.add(mediumButton);
@@ -112,11 +120,14 @@ public class GameView extends JFrame implements ActionListener {
         pauseButton.setBounds(10, 10, 70, 30);
         playingScreen.add(pauseButton);
 
-        restartButton.setBounds(125, 200, 150, 25);
-        exitButton.setBounds(125, 250, 150, 25);
-        myScoresButton.setBounds(125, 300, 150, 25);
-        highScoresButton.setBounds(125, 350, 150, 25);
-        pauseText.setBounds(50, 50, 300, 30);
+        pauseText.setBounds(getWidth() / 2 - 80, 50, 200, 50);
+        restartButton.setBounds(getWidth() / 2 - 75, 200, 150, 50);
+        highScoresButton.setBounds(getWidth() / 2 - 75, 275, 150, 50);
+        myScoresButton.setBounds(getWidth() / 2 - 75, 350, 150, 50);
+        exitButton.setForeground(Color.RED);
+        exitButton.setBounds(getWidth() / 2 - 75, 425, 150, 50);
+        resumeButton.setBounds(10, 10, 90, 30);
+
         pauseScreen.add(pauseText);
         pauseScreen.add(restartButton);
         pauseScreen.add(exitButton);
@@ -124,19 +135,15 @@ public class GameView extends JFrame implements ActionListener {
         pauseScreen.add(highScoresButton);
         pauseScreen.add(resumeButton);
 
-        gameoverText.setBounds(50, 50, 300, 30);
-        backFromGameoverButton.setBounds(50, 100, 100, 30);
+        gameoverText.setBounds(getWidth() / 2 - 85, 50, 200, 50);
+        backFromGameoverButton.setBounds(getWidth() / 2 - 75, 275, 150, 50);
         gameoverScreen.add(gameoverText);
         gameoverScreen.add(backFromGameoverButton);
 
-        backFromScoresButton.setBounds(5, 5, 100, 25);
-        highScoresText.setBounds(50, 50, 300, 30);
-        highScoresScreen.add(highScoresText);
+        backFromScoresButton.setBounds(10, 10, 100, 25);
         highScoresScreen.add(backFromScoresButton);
 
-        backFromLeaderboardButton.setBounds(5, 5, 100, 25);
-        leaderboardText.setBounds(50, 50, 300, 30);
-        leaderboardScreen.add(leaderboardText);
+        backFromLeaderboardButton.setBounds(10, 10, 100, 25);
         leaderboardScreen.add(backFromLeaderboardButton);
 
         cardPanel.add(welcomeScreen, "1");
@@ -152,8 +159,30 @@ public class GameView extends JFrame implements ActionListener {
                 BOARD_WIDTH + OUTER_MARGIN * 2 + HEADER_HEIGHT + OUTER_MARGIN);
         playingScreen.add(gamePanel);
         gamePanel.setBackground(colorTheme.getBackgroundColor());
+
+        GamePanel higscorePanel = new GamePanel();
+        higscorePanel.setBounds(0, 0, BOARD_WIDTH + OUTER_MARGIN * 2,
+                BOARD_WIDTH + OUTER_MARGIN * 2 + HEADER_HEIGHT + OUTER_MARGIN);
+        highScoresScreen.add(higscorePanel);
+        higscorePanel.setBackground(colorTheme.getBackgroundColor());
+
+        GamePanel leaderboardPanel = new GamePanel();
+        leaderboardPanel.setBounds(0, 0, BOARD_WIDTH + OUTER_MARGIN * 2,
+                BOARD_WIDTH + OUTER_MARGIN * 2 + HEADER_HEIGHT + OUTER_MARGIN);
+        leaderboardScreen.add(leaderboardPanel);
+        leaderboardPanel.setBackground(colorTheme.getBackgroundColor());
+
         getContentPane().add(cardPanel, BorderLayout.CENTER);
 
+        timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (model.getGameState() == GameState.PLAYING) {
+                    secondsPassed++;
+                }
+            }
+        });
+        timer.start();
     }
 
     private class GamePanel extends JPanel {
@@ -170,14 +199,34 @@ public class GameView extends JFrame implements ActionListener {
     private void drawGame(Graphics2D g2) {
         if (model.getGameState() == GameState.FINISHED) {
             cardLayout.show(cardPanel, "4");
-        }
-        CellPositionToPixelConverter converter = new CellPositionToPixelConverter(
-                getBoardCanvas(), model.getDimension(), INNER_MARGIN);
-        header(g2);
-        for (GridCell cell : model.getAllTiles()) {
-            drawCell(g2, cell, converter);
+            formatTime(secondsPassed);
         }
 
+        if (model.getGameState() == GameState.MY_SCORES) {
+            cardLayout.show(cardPanel, "5");
+            header(g2, "Dine resultater");
+            updateQuereies();
+            drawUserScores(g2, userScores);
+        }
+
+        if (model.getGameState() == GameState.LEADERBOARD) {
+            cardLayout.show(cardPanel, "6");
+            updateQuereies();
+            header(g2, "Topplista");
+            drawAllScores(g2, allScores);
+        }
+
+        if (model.getGameState() == GameState.PLAYING) {
+            cardLayout.show(cardPanel, "2");
+            CellPositionToPixelConverter converter = new CellPositionToPixelConverter(
+                    getBoardCanvas(), model.getDimension(), INNER_MARGIN);
+            header(g2, "SUDOKU");
+            timer(g2);
+            for (GridCell cell : model.getAllTiles()) {
+                drawCell(g2, cell, converter);
+            }
+        }
+        model.setTime(secondsPassed);
     }
 
     private void drawCell(Graphics2D g2, GridCell cell, CellPositionToPixelConverter converter) {
@@ -204,11 +253,90 @@ public class GameView extends JFrame implements ActionListener {
         return new Rectangle2D.Double(x0, y0, BOARD_WIDTH, BOARD_WIDTH);
     }
 
-    private void header(Graphics2D g2) {
+    private void header(Graphics2D g2, String text) {
         g2.setColor(colorTheme.getTextColor());
         g2.setFont(new Font(FONT, Font.BOLD, Math.min(getWidth() / 10, getHeight() / 10)));
-        Inf101Graphics.drawCenteredString(g2, "SUDOKU", 0, 0, getWidth(),
+        Inf101Graphics.drawCenteredString(g2, text, 0, 0, getWidth(),
                 HEADER_HEIGHT + OUTER_MARGIN);
+    }
+
+    public String formatTime(int seconds) {
+        int minutes = seconds / 60;
+        int remainingSeconds = seconds % 60;
+        return String.format("%02d:%02d ", minutes, remainingSeconds);
+    }
+
+    private void timer(Graphics2D g2) {
+        g2.setColor(colorTheme.getTextColor());
+        g2.setFont(new Font(FONT, Font.BOLD, 20));
+        // stack overflow
+        // https://stackoverflow.com/questions/19582502/how-to-get-the-correct-string-width-from-fontmetrics-in-java
+        // 17. mars 2024
+        g2.setFont(new Font(FONT, Font.PLAIN, Math.min(getWidth() / 30, getHeight() / 30)));
+        FontMetrics metrics = g2
+                .getFontMetrics(new Font(FONT, Font.PLAIN, Math.min(getWidth() / 30, getHeight() / 30)));
+        int stringLength = metrics.stringWidth(formatTime(secondsPassed));
+        g2.drawString(formatTime(secondsPassed), OUTER_MARGIN + BOARD_WIDTH - stringLength,
+                OUTER_MARGIN + HEADER_HEIGHT - 10);
+
+    }
+
+    private void drawAllScores(Graphics2D g2, List<Score> scores) {
+        scores = scoreQueries.sortByTime(scores);
+        g2.setColor(colorTheme.getTextColor());
+        g2.setFont(new Font(FONT, Font.BOLD, 15));
+
+        Rectangle2D tableBounds = getBoardCanvas();
+
+        int x = (int) tableBounds.getX() + INNER_MARGIN;
+        int y = (int) tableBounds.getY() + INNER_MARGIN;
+        int cellWidth = (int) tableBounds.getWidth() / 3;
+        int cellHeight = 30;
+
+        g2.setFont(new Font(FONT, Font.BOLD, 15));
+        g2.drawString("Username", x, y);
+        g2.drawString("Difficulty", x + cellWidth, y);
+        g2.drawString("Time", x + 2 * cellWidth, y);
+
+        g2.drawLine(x, y + INNER_MARGIN * 2, x + (int) tableBounds.getWidth(), y + INNER_MARGIN * 2);
+
+        g2.setFont(new Font(FONT, Font.PLAIN, 15));
+
+        y += cellHeight + INNER_MARGIN;
+        for (Score score : scores) {
+            g2.drawString(score.getUsername(), x, y);
+            g2.drawString(score.getDifficulty().toString(), x + cellWidth, y);
+            g2.drawString(formatTime(score.getSeconds()), x + 2 * cellWidth, y);
+            y += cellHeight + INNER_MARGIN;
+        }
+    }
+
+    private void drawUserScores(Graphics2D g2, List<Score> scores) {
+        scores = scoreQueries.sortByTime(scores);
+        g2.setColor(colorTheme.getTextColor());
+        g2.setFont(new Font(FONT, Font.BOLD, 15));
+
+        Rectangle2D tableBounds = getBoardCanvas();
+
+        int x = (int) tableBounds.getX() + INNER_MARGIN;
+        int y = (int) tableBounds.getY() + INNER_MARGIN;
+        int cellWidth = (int) tableBounds.getWidth() / 2;
+        int cellHeight = 30;
+
+        g2.setFont(new Font(FONT, Font.BOLD, 15));
+        g2.drawString("Difficulty", x, y);
+        g2.drawString("Time", x + cellWidth, y);
+
+        g2.drawLine(x, y + INNER_MARGIN * 2, x + (int) tableBounds.getWidth(), y + INNER_MARGIN * 2);
+
+        g2.setFont(new Font(FONT, Font.PLAIN, 15));
+
+        y += cellHeight + INNER_MARGIN;
+        for (Score score : scores) {
+            g2.drawString(score.getDifficulty().toString(), x, y);
+            g2.drawString(formatTime(score.getSeconds()), x + cellWidth, y);
+            y += cellHeight + INNER_MARGIN;
+        }
     }
 
     @Override
@@ -217,16 +345,19 @@ public class GameView extends JFrame implements ActionListener {
             model.start(Difficulty.EASY);
             model.setGameState(GameState.PLAYING);
             cardLayout.show(cardPanel, "2");
+            secondsPassed = 0;
             System.out.println("Easy");
         } else if (e.getSource() == mediumButton) {
             model.start(Difficulty.MEDIUM);
             model.setGameState(GameState.PLAYING);
             cardLayout.show(cardPanel, "2");
+            secondsPassed = 0;
             System.out.println("Medium");
         } else if (e.getSource() == hardButton) {
             model.start(Difficulty.HARD);
             model.setGameState(GameState.PLAYING);
             cardLayout.show(cardPanel, "2");
+            secondsPassed = 0;
             System.out.println("Hard");
         } else if (e.getSource() == pauseButton) {
             model.setGameState(GameState.PAUSED);
@@ -263,5 +394,11 @@ public class GameView extends JFrame implements ActionListener {
             cardLayout.show(cardPanel, "1");
             System.out.println("Back from Gameover");
         }
+    }
+
+    public void updateQuereies() {
+        scoreQueries = new ScoreUtils();
+        allScores = scoreQueries.getAllScores();
+        userScores = scoreQueries.getScoreFromUser(username);
     }
 }

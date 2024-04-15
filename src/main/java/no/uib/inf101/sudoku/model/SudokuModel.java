@@ -15,6 +15,7 @@ public class SudokuModel implements ViewableSudokuModel, ControllableSudokuModel
     private ScoreUtils scoreQueries = new ScoreUtils();
     private String username;
     Difficulty difficulty;
+    int time;
 
     public SudokuModel(String username) {
         gameState = GameState.WELCOME;
@@ -76,7 +77,7 @@ public class SudokuModel implements ViewableSudokuModel, ControllableSudokuModel
                 }
             }
         }
-        scoreQueries.insertScore(username, 0, 0, 0, 0, generator.getPlayableBoard(),
+        scoreQueries.insertScore(username, 0, time, 0, 0, generator.getPlayableBoard(),
                 generator.getSolvedBoard(), generator.getDifficulty(difficulty));
         gameState = GameState.FINISHED;
         return true;
@@ -92,5 +93,9 @@ public class SudokuModel implements ViewableSudokuModel, ControllableSudokuModel
 
     public Difficulty getDifficulty() {
         return difficulty;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
     }
 }

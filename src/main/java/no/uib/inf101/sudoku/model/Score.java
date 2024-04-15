@@ -7,14 +7,14 @@ public class Score {
     private String username;
     private Integer score;
     private LocalDateTime finishedAt;
-    private long timeUsed;
+    private int timeUsed;
     private Integer lifesUsed;
     private Integer hintsUsed;
     private String startBoard;
     private String solvedBoard;
     private Integer difficulty;
 
-    public Score(String username, Integer score, LocalDateTime finishedAt, long timeUsed, Integer lifesUsed,
+    public Score(String username, Integer score, LocalDateTime finishedAt, int timeUsed, Integer lifesUsed,
             Integer hintsUsed, String startBoard, String solvedBoard, Integer difficulty) {
         this.username = username;
         this.score = score;
@@ -39,7 +39,7 @@ public class Score {
         return finishedAt;
     }
 
-    public long getTimeUsed() {
+    public int getSeconds() {
         return timeUsed;
     }
 

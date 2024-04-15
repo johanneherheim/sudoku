@@ -9,8 +9,6 @@
 /bin/
 bin
 tmp
-src/main/resources/db/user.csv
-src/main/resources/db/score.csv
 
 # Packages #
 ############

@@ -7,6 +7,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import no.uib.inf101.sudoku.model.Score;
@@ -27,7 +29,7 @@ public class ScoreUtils {
                 String username = data[0].trim();
                 Integer score = Integer.parseInt(data[1].trim());
                 LocalDateTime finishedAt = LocalDateTime.parse(data[2].trim());
-                long timeUsed = Long.parseLong(data[3].trim());
+                int timeUsed = Integer.parseInt(data[3].trim());
                 Integer lifesUsed = Integer.parseInt(data[4].trim());
                 Integer hintsUsed = Integer.parseInt(data[5].trim());
                 String startBoard = data[6].trim();
@@ -42,27 +44,15 @@ public class ScoreUtils {
         }
     }
 
-    public List<Integer> getScoreFromUser(String username) {
-        String csvFilePath = "src/main/resources/db/score.csv";
-        String line;
-        String csvSplitBy = ",";
-        List<Integer> scoreData = new ArrayList<Integer>();
-
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
-            br.readLine();
-            while ((line = br.readLine()) != null) {
-                String[] data = line.split(csvSplitBy);
-                // i use trim to remove whitespace
-                String user = data[0].trim();
-                String score = data[1].trim();
-                if (user.equals(username)) {
-                    scoreData.add(Integer.parseInt(score));
-                }
+    public List<Score> getScoreFromUser(String username) {
+        List<Score> scoreData = new ArrayList<Score>();
+        for (Score score : getAllScores()) {
+            if (score.getUsername().equals(username)) {
+                scoreData.add(score);
             }
-            return scoreData;
-        } catch (IOException e) {
-            throw new RuntimeException("Error reading CSV file: " + e.getMessage());
         }
+        return scoreData;
+
     }
 
     public void insertScore(String username, Integer score, long elapsedTime, Integer lifesUsed, Integer hintsUsed,
@@ -84,5 +74,22 @@ public class ScoreUtils {
         } catch (Exception e) {
             throw new RuntimeException("Error adding new user: " + e.getMessage());
         }
+    }
+
+    public List<Score> sortByTime(List<Score> scores) {
+        // Create a new comparator to compare scores by time used
+        Comparator<Score> timeComparator = new Comparator<Score>() {
+            @Override
+            public int compare(Score s1, Score s2) {
+                // Compare by time used (elapsed time)
+                return Integer.compare(s1.getSeconds(), s2.getSeconds());
+            }
+        };
+
+        // Sort the list using the custom comparator
+        Collections.sort(scores, timeComparator);
+
+        // Return the sorted list
+        return scores;
     }
 }
