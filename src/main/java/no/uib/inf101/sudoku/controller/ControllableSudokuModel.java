@@ -1,6 +1,7 @@
 package no.uib.inf101.sudoku.controller;
 
 import no.uib.inf101.grid.CellPosition;
+import no.uib.inf101.grid.GridCell;
 import no.uib.inf101.grid.GridDimension;
 import no.uib.inf101.sudoku.model.GameState;
 import no.uib.inf101.sudoku.model.SudokuBoard;
@@ -22,4 +23,10 @@ public interface ControllableSudokuModel {
     void setSelectedCell(CellPosition cell);
 
     boolean isSolved();
+
+    GridCell getCellFromPosition(CellPosition cell);
+
+    int getLifes();
+
+    void decreaseLifes();
 }

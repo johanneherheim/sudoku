@@ -71,7 +71,10 @@ public class SudokuController implements java.awt.event.KeyListener {
         }
         System.out.println("Key pressed: " + e.getKeyCode());
         System.out.println("Selected cell: " + model.getSelectedCell());
-        if (model.isSolved()) {
+        if (!model.getCellFromPosition(model.getSelectedCell()).isCorrect()) {
+            model.decreaseLifes();
+        }
+        if (model.isSolved() || model.getLifes() == 0) {
             model.setGameState(GameState.FINISHED);
         }
         view.repaint();

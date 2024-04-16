@@ -77,7 +77,6 @@ public class ScoreUtils {
     }
 
     public List<Score> sortByTime(List<Score> scores) {
-        // Create a new comparator to compare scores by time used
         Comparator<Score> timeComparator = new Comparator<Score>() {
             @Override
             public int compare(Score s1, Score s2) {
@@ -86,10 +85,28 @@ public class ScoreUtils {
             }
         };
 
-        // Sort the list using the custom comparator
         Collections.sort(scores, timeComparator);
 
-        // Return the sorted list
+        return scores;
+    }
+
+    public List<Score> sortByLifesAndTime(List<Score> scores) {
+        Comparator<Score> lifesAndTimeComparator = new Comparator<Score>() {
+            @Override
+            public int compare(Score s1, Score s2) {
+                // Compare by lifes used in descending order
+                int lifesComparison = Integer.compare(s2.getLifesUsed(), s1.getLifesUsed());
+                // If the lifes used are the same, compare by time used
+                if (lifesComparison == 0) {
+                    return Integer.compare(s1.getSeconds(), s2.getSeconds());
+                }
+                return lifesComparison;
+            }
+        };
+        Collections.sort(scores, lifesAndTimeComparator);
+        if (scores.size() > 15) {
+            return scores.subList(0, 15);
+        }
         return scores;
     }
 }

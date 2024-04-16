@@ -74,12 +74,13 @@ public class GameView extends JFrame implements ActionListener {
 
     public GameView(String username) {
         this.username = username;
-        this.model = new SudokuModel(username);
-        this.controller = new SudokuController(model, this);
+        model = new SudokuModel(username);
+        controller = new SudokuController(model, this);
         allScores = scoreQueries.getAllScores();
         userScores = scoreQueries.getScoreFromUser(username);
         setTitle("Sudoku");
         setSize(GAME_SIZE);
+        setResizable(false);
         cardLayout = new CardLayout();
         cardPanel = new JPanel();
         cardPanel.setLayout(cardLayout);
@@ -182,11 +183,16 @@ public class GameView extends JFrame implements ActionListener {
 
         getContentPane().add(cardPanel, BorderLayout.CENTER);
 
+        startTimer();
+    }
+
+    private void startTimer() {
         timer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (model.getGameState() == GameState.PLAYING) {
                     secondsPassed++;
+                    repaint();
                 }
             }
         });
@@ -214,14 +220,14 @@ public class GameView extends JFrame implements ActionListener {
             cardLayout.show(cardPanel, "5");
             header(g2, "Dine resultater");
             updateQuereies();
-            drawUserScores(g2, userScores);
+            drawScores(g2, userScores);
         }
 
         if (model.getGameState() == GameState.LEADERBOARD) {
             cardLayout.show(cardPanel, "6");
             updateQuereies();
             header(g2, "Topplista");
-            drawAllScores(g2, allScores);
+            drawScores(g2, allScores);
         }
 
         if (model.getGameState() == GameState.PLAYING) {
@@ -230,6 +236,7 @@ public class GameView extends JFrame implements ActionListener {
                     getBoardCanvas(), model.getDimension(), INNER_MARGIN);
             header(g2, "SUDOKU");
             timer(g2);
+            drawLifes(g2, lifeToLifeString(model.getLifes()));
             for (GridCell cell : model.getAllTiles()) {
                 drawCell(g2, cell, converter);
             }
@@ -286,11 +293,40 @@ public class GameView extends JFrame implements ActionListener {
         int stringLength = metrics.stringWidth(formatTime(secondsPassed));
         g2.drawString(formatTime(secondsPassed), OUTER_MARGIN + BOARD_WIDTH - stringLength,
                 OUTER_MARGIN + HEADER_HEIGHT - 10);
-
     }
 
-    private void drawAllScores(Graphics2D g2, List<Score> scores) {
-        scores = scoreQueries.sortByTime(scores);
+    private String lifeToLifeString(int lifes) {
+        switch (lifes) {
+            case 2:
+                return "💚💚💔";
+            case 1:
+                return "💚💔💔";
+            case 0:
+                return "💔💔💔";
+            default:
+                return "💚💚💚";
+        }
+    }
+
+    private void drawLifes(Graphics2D g2, String lifes) {
+        g2.setFont(new Font(FONT, Font.PLAIN, Math.min(getWidth() / 30, getHeight() / 30)));
+        g2.drawString(lifes, getWidth() / 2 - BOARD_WIDTH / 2,
+                OUTER_MARGIN + HEADER_HEIGHT - 10);
+    }
+
+    private String difficultyNumberToString(int number) {
+        switch (number) {
+            case 2:
+                return "MEDIUM";
+            case 3:
+                return "HARD";
+            default:
+                return "EASY";
+        }
+    }
+
+    private void drawScores(Graphics2D g2, List<Score> scores) {
+        scores = scoreQueries.sortByLifesAndTime(scores);
         g2.setColor(colorTheme.getTextColor());
         g2.setFont(new Font(FONT, Font.BOLD, 15));
 
@@ -298,13 +334,20 @@ public class GameView extends JFrame implements ActionListener {
 
         int x = (int) tableBounds.getX() + INNER_MARGIN;
         int y = (int) tableBounds.getY() + INNER_MARGIN;
-        int cellWidth = (int) tableBounds.getWidth() / 3;
+        int cellWidth = (int) tableBounds.getWidth() / (allNamesAreSame(scores) ? 3 : 4);
         int cellHeight = 30;
 
         g2.setFont(new Font(FONT, Font.BOLD, 15));
-        g2.drawString("Username", x, y);
-        g2.drawString("Difficulty", x + cellWidth, y);
-        g2.drawString("Time", x + 2 * cellWidth, y);
+        if (allNamesAreSame(scores)) {
+            g2.drawString("Nivå", x, y);
+            g2.drawString("Tid", x + cellWidth, y);
+            g2.drawString("Liv", x + 2 * cellWidth, y);
+        } else {
+            g2.drawString("Brukar", x, y);
+            g2.drawString("Nivå", x + cellWidth, y);
+            g2.drawString("Tid", x + 2 * cellWidth, y);
+            g2.drawString("Liv", x + 3 * cellWidth, y);
+        }
 
         g2.drawLine(x, y + INNER_MARGIN * 2, x + (int) tableBounds.getWidth(), y + INNER_MARGIN * 2);
 
@@ -312,39 +355,31 @@ public class GameView extends JFrame implements ActionListener {
 
         y += cellHeight + INNER_MARGIN;
         for (Score score : scores) {
-            g2.drawString(score.getUsername(), x, y);
-            g2.drawString(score.getDifficulty().toString(), x + cellWidth, y);
-            g2.drawString(formatTime(score.getSeconds()), x + 2 * cellWidth, y);
+            if (allNamesAreSame(scores)) {
+                g2.drawString(difficultyNumberToString(score.getDifficulty()), x, y);
+                g2.drawString(formatTime(score.getSeconds()), x + cellWidth, y);
+                g2.drawString(lifeToLifeString(score.getLifesUsed()), x + 2 * cellWidth, y);
+            } else {
+                g2.drawString(score.getUsername(), x, y);
+                g2.drawString(difficultyNumberToString(score.getDifficulty()), x + cellWidth, y);
+                g2.drawString(formatTime(score.getSeconds()), x + 2 * cellWidth, y);
+                g2.drawString(lifeToLifeString(score.getLifesUsed()), x + 3 * cellWidth, y);
+            }
             y += cellHeight + INNER_MARGIN;
         }
     }
 
-    private void drawUserScores(Graphics2D g2, List<Score> scores) {
-        scores = scoreQueries.sortByTime(scores);
-        g2.setColor(colorTheme.getTextColor());
-        g2.setFont(new Font(FONT, Font.BOLD, 15));
-
-        Rectangle2D tableBounds = getBoardCanvas();
-
-        int x = (int) tableBounds.getX() + INNER_MARGIN;
-        int y = (int) tableBounds.getY() + INNER_MARGIN;
-        int cellWidth = (int) tableBounds.getWidth() / 2;
-        int cellHeight = 30;
-
-        g2.setFont(new Font(FONT, Font.BOLD, 15));
-        g2.drawString("Difficulty", x, y);
-        g2.drawString("Time", x + cellWidth, y);
-
-        g2.drawLine(x, y + INNER_MARGIN * 2, x + (int) tableBounds.getWidth(), y + INNER_MARGIN * 2);
-
-        g2.setFont(new Font(FONT, Font.PLAIN, 15));
-
-        y += cellHeight + INNER_MARGIN;
-        for (Score score : scores) {
-            g2.drawString(score.getDifficulty().toString(), x, y);
-            g2.drawString(formatTime(score.getSeconds()), x + cellWidth, y);
-            y += cellHeight + INNER_MARGIN;
+    private boolean allNamesAreSame(List<Score> scores) {
+        if (scores.isEmpty()) {
+            return true;
         }
+        String firstUsername = scores.get(0).getUsername();
+        for (Score score : scores) {
+            if (!score.getUsername().equals(firstUsername)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -403,8 +438,8 @@ public class GameView extends JFrame implements ActionListener {
             System.out.println("Back from Gameover");
         } else if (e.getSource() == toggleLightModeButton) {
             toggleLightMode();
-            repaint();
         }
+        repaint();
     }
 
     public void updateQuereies() {
@@ -416,7 +451,6 @@ public class GameView extends JFrame implements ActionListener {
     public void toggleLightMode() {
         if (isDefaultColorTheme) {
             colorTheme = new LightColorTheme();
-            isDefaultColorTheme = false;
             toggleLightModeButton.setText("🌙");
             welcomeScreen.setBackground(colorTheme.getBackgroundColor());
             playingScreen.setBackground(colorTheme.getBackgroundColor());
@@ -428,11 +462,9 @@ public class GameView extends JFrame implements ActionListener {
             higscorePanel.setBackground(colorTheme.getBackgroundColor());
             leaderboardPanel.setBackground(colorTheme.getBackgroundColor());
             setBackground(colorTheme.getBackgroundColor());
-            repaint();
-            revalidate();
+
         } else {
             colorTheme = new DefaultColorTheme();
-            isDefaultColorTheme = true;
             toggleLightModeButton.setText("🌞");
             welcomeScreen.setBackground(colorTheme.getBackgroundColor());
             playingScreen.setBackground(colorTheme.getBackgroundColor());
@@ -444,8 +476,7 @@ public class GameView extends JFrame implements ActionListener {
             higscorePanel.setBackground(colorTheme.getBackgroundColor());
             leaderboardPanel.setBackground(colorTheme.getBackgroundColor());
             setBackground(colorTheme.getBackgroundColor());
-            repaint();
-            revalidate();
         }
+        isDefaultColorTheme = !isDefaultColorTheme;
     }
 }
