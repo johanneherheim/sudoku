@@ -9,13 +9,13 @@ import no.uib.inf101.sudoku.view.GameView;
 public class SudokuController implements java.awt.event.KeyListener {
 
     private ControllableSudokuModel model;
-
     private GameView view;
 
     public SudokuController(ControllableSudokuModel model, GameView view) {
         this.model = model;
         this.view = view;
         view.addKeyListener(this);
+        new SudokuMouseController(model, view);
         view.setFocusable(true);
     }
 

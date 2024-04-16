@@ -21,7 +21,7 @@ import no.uib.inf101.sudoku.view.tools.Inf101Graphics;
 public class GameView extends JFrame implements ActionListener {
 
     private static final String FONT = "Helvetica Neue";
-    private static final int INNER_MARGIN = 3;
+    public static final int INNER_MARGIN = 3;
     private static final int OUTER_MARGIN = 30;
     private static final int HEADER_HEIGHT = 150;
     private static final int BOARD_WIDTH = 500;
@@ -262,7 +262,7 @@ public class GameView extends JFrame implements ActionListener {
         }
     }
 
-    private Rectangle2D getBoardCanvas() {
+    public Rectangle2D getBoardCanvas() {
         double x0 = getWidth() / 2 - BOARD_WIDTH / 2;
         double y0 = HEADER_HEIGHT + OUTER_MARGIN;
         return new Rectangle2D.Double(x0, y0, BOARD_WIDTH, BOARD_WIDTH);
@@ -298,13 +298,13 @@ public class GameView extends JFrame implements ActionListener {
     private String lifeToLifeString(int lifes) {
         switch (lifes) {
             case 2:
-                return "💚💚💔";
+                return " 💚 💚 💔 ";
             case 1:
-                return "💚💔💔";
+                return " 💚 💔 💔 ";
             case 0:
-                return "💔💔💔";
+                return " 💔 💔 💔 ";
             default:
-                return "💚💚💚";
+                return " 💚 💚 💚 ";
         }
     }
 

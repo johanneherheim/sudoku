@@ -47,11 +47,11 @@ public class CellPositionToPixelConverter {
         double numberOfRows = this.gd.getRows();
         double numberOfCols = this.gd.getCols();
 
-        double cellHeight = (boxHeight - (numberOfRows + 1) * MARGIN) / numberOfRows;
-        double cellWidth = (boxWidth - (numberOfCols + 1) * MARGIN) / numberOfCols;
+        double cellHeight = (boxHeight - (numberOfRows - 1) * MARGIN) / numberOfRows;
+        double cellWidth = (boxWidth - (numberOfCols - 1) * MARGIN) / numberOfCols;
 
-        double x = x0 + MARGIN * (col + 1) + cellWidth * col;
-        double y = y0 + MARGIN * (row + 1) + cellHeight * row;
+        double x = x0 + MARGIN * col + cellWidth * col;
+        double y = y0 + MARGIN * row + cellHeight * row;
         return new Rectangle2D.Double(x, y, cellWidth, cellHeight);
     }
 
