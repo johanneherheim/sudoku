@@ -17,16 +17,16 @@ public class SudokuBoard extends Grid {
      * 
      * @return a string representation of the board
      */
-    String prettyString() {
-        String board = "";
+    public String prettyString() {
+        StringBuilder board = new StringBuilder();
         Integer count = 1;
         for (GridCell cell : this) {
-            board += cell.number();
+            board.append(cell.number());
             if (count % this.getCols() == 0) {
-                board += "\n";
+                board.append("\n");
             }
-            count += 1;
+            count++;
         }
-        return board.substring(0, board.length() - 1);
+        return board.toString();
     }
 }

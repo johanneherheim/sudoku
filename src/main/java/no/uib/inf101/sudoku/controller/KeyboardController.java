@@ -6,16 +6,16 @@ import no.uib.inf101.grid.CellPosition;
 import no.uib.inf101.sudoku.model.GameState;
 import no.uib.inf101.sudoku.view.GameView;
 
-public class SudokuController implements java.awt.event.KeyListener {
+public class KeyboardController implements java.awt.event.KeyListener {
 
     private ControllableSudokuModel model;
     private GameView view;
 
-    public SudokuController(ControllableSudokuModel model, GameView view) {
+    public KeyboardController(ControllableSudokuModel model, GameView view) {
         this.model = model;
         this.view = view;
         view.addKeyListener(this);
-        new SudokuMouseController(model, view);
+        new MouseController(model, view);
         view.setFocusable(true);
     }
 

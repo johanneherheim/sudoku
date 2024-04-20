@@ -19,7 +19,7 @@ public class Generator {
 
     public void generateBoard() {
         fillBoard(0, 0);
-        makeBoardPlayable(getDifficulty(difficulty));
+        makeBoardPlayable(difficultyEnumToId(difficulty));
     }
 
     private boolean fillBoard(int row, int col) {
@@ -86,13 +86,16 @@ public class Generator {
         return playableBoard;
     }
 
-    public Integer getDifficulty(Difficulty difficulty) {
-        if (difficulty == Difficulty.EASY) {
-            return 1;
-        } else if (difficulty == Difficulty.MEDIUM) {
-            return 2;
-        } else {
-            return 3;
+    public Integer difficultyEnumToId(Difficulty difficulty) {
+        switch (difficulty) {
+            case EASY:
+                return 1;
+            case MEDIUM:
+                return 2;
+            case HARD:
+                return 3;
+            default:
+                throw new IllegalArgumentException("Unsupported difficulty: " + difficulty);
         }
     }
 }

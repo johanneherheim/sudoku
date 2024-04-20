@@ -62,7 +62,7 @@ public class SudokuModelTest {
     }
 
     @Test
-    public void testSetSelectedSell() {
+    public void testSetSelectedCell() {
         SudokuModel sudokuModel = new SudokuModel("Test Testesen");
 
         sudokuModel.setSelectedCell(new CellPosition(0, 0));

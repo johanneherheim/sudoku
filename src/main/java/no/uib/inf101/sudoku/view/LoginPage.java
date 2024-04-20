@@ -6,39 +6,45 @@ import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import org.apache.commons.codec.digest.DigestUtils;
-
+import no.uib.inf101.sudoku.controller.LoginController;
 import no.uib.inf101.sudoku.dao.UserUtils;
 import no.uib.inf101.sudoku.model.User;
 
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LoginPage implements ActionListener, KeyListener {
+public class LoginPage {
 
-    JFrame frame = new JFrame();
-    JButton loginButton = new JButton("Logg inn");
-    JButton signupButton = new JButton("Ny brukar");
-    JTextField usernameInput = new JTextField();
-    JPasswordField passwordInput = new JPasswordField();
-    JLabel usernameLabel = new JLabel("Brukarnavn:");
-    JLabel passwordLabel = new JLabel("Passord:");
-    JLabel messageLabel = new JLabel();
+    /** Login window */
+    private final JFrame loginFrame = new JFrame();
 
-    UserUtils userQueries = new UserUtils();
-    List<User> users = new ArrayList<User>();
+    /** Buttons */
+    private final JButton loginButton = new JButton("Logg inn");
+    private final JButton signupButton = new JButton("Ny brukar");
+
+    /** Text fields */
+    private final JTextField usernameInput = new JTextField();
+    private final JPasswordField passwordInput = new JPasswordField();
+
+    /** Labels */
+    private final JLabel usernameLabel = new JLabel("Brukarnavn:");
+    private final JLabel passwordLabel = new JLabel("Passord:");
+    private final JLabel messageLabel = new JLabel();
+
+    /** User utils */
+    private final UserUtils userQueries = new UserUtils();
+    private List<User> users = new ArrayList<User>();
 
     public LoginPage() {
-        users = userQueries.getAllUsers();
+        LoginController controller = new LoginController(this);
 
-        usernameInput.addKeyListener(this);
-        passwordInput.addKeyListener(this);
-        loginButton.addKeyListener(this);
+        loginButton.addActionListener(controller);
+        signupButton.addActionListener(controller);
+        usernameInput.addKeyListener(controller);
+        passwordInput.addKeyListener(controller);
+
+        users = userQueries.getAllUsers();
 
         usernameLabel.setBounds(50, 50, 75, 25);
         passwordLabel.setBounds(50, 100, 75, 25);
@@ -50,107 +56,69 @@ public class LoginPage implements ActionListener, KeyListener {
         passwordInput.setBounds(125, 100, 200, 25);
 
         loginButton.setBounds(125, 150, 100, 25);
-        loginButton.addActionListener(this);
         loginButton.setFocusable(false);
 
         signupButton.setBounds(225, 150, 100, 25);
-        signupButton.addActionListener(this);
         signupButton.setFocusable(false);
 
-        frame.add(usernameLabel);
-        frame.add(passwordLabel);
-        frame.add(messageLabel);
-        frame.add(usernameInput);
-        frame.add(passwordInput);
-        frame.add(loginButton);
-        frame.add(signupButton);
+        loginFrame.add(usernameLabel);
+        loginFrame.add(passwordLabel);
+        loginFrame.add(messageLabel);
+        loginFrame.add(usernameInput);
+        loginFrame.add(passwordInput);
+        loginFrame.add(loginButton);
+        loginFrame.add(signupButton);
 
-        frame.setTitle("Logg inn");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 250);
-        frame.setResizable(false);
-        frame.setLayout(null);
-        frame.setVisible(true);
+        loginFrame.setTitle("Logg inn");
+        loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        loginFrame.setSize(400, 250);
+        loginFrame.setResizable(false);
+        loginFrame.setLayout(null);
+        loginFrame.setVisible(true);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == loginButton) {
+    public JButton getLoginButton() {
+        return loginButton;
+    }
 
-            String username = usernameInput.getText();
-            String password = String.valueOf(passwordInput.getPassword());
-            boolean userNotFound = true;
+    public JButton getSignupButton() {
+        return signupButton;
+    }
 
-            for (User user : users) {
-                if (user.getUsername().equals(username)) {
-                    userNotFound = false;
-                    if (user.getPassword().equals(hash(password))) {
+    public String getUsername() {
+        return usernameInput.getText();
+    }
 
-                        launchGame(username);
+    public String getPassword() {
+        return new String(passwordInput.getPassword());
+    }
 
-                        frame.dispose();
-                    } else {
-                        messageLabel.setText("Feil passord");
-                        passwordInput.setText("");
-                    }
-                    break;
-                }
-            }
-            if (userNotFound) {
-                messageLabel.setText("Brukarnamnet finst ikkje");
-                usernameInput.setText("");
-                passwordInput.setText("");
-            }
-        }
-        if (e.getSource() == signupButton) {
+    public void setMessage(String message) {
+        messageLabel.setText(message);
+    }
 
-            String newUsername = usernameInput.getText();
-            String newPassword = String.valueOf(passwordInput.getPassword());
-            boolean usernameExists = false;
-
-            for (User user : users) {
-                if (user.getUsername().equals(newUsername)) {
-                    usernameExists = true;
-                    break;
-                }
-            }
-            if (newUsername.equals("") || newPassword.equals("")) {
-                messageLabel.setText("Fyll ut alle felt, takk");
-            } else if (usernameExists) {
-                messageLabel.setText("Brukarnamnet er allerede i bruk");
-            } else {
-                userQueries.insertUser(newUsername, hash(newPassword));
-
-                launchGame(newUsername);
-
-                frame.dispose();
-            }
+    public void clearFields(boolean onlyPassword) {
+        if (onlyPassword) {
+            passwordInput.setText("");
+        } else {
+            usernameInput.setText("");
+            passwordInput.setText("");
         }
     }
 
-    private void launchGame(String username) {
+    public List<User> getAllUsers() {
+        return users;
+    }
+
+    public UserUtils getUserQueries() {
+        return userQueries;
+    }
+
+    public void launchGame(String username) {
         GameView gameView = new GameView(username);
-        System.out.println("Launching game for user: " + username);
+        System.out.println("Logging inn as " + username + " ...");
         gameView.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gameView.setVisible(true);
-    }
-
-    private String hash(String message) {
-        return DigestUtils.sha256Hex(message);
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-            loginButton.doClick();
-        }
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
+        loginFrame.dispose();
     }
 }

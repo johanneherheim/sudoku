@@ -66,7 +66,7 @@ public class CellPositionToPixelConverter {
         double boxHeight = this.box.getHeight();
         double numberOfRows = this.gd.getRows();
         double cellHeight = (boxHeight - (numberOfRows + 1) * MARGIN) / numberOfRows;
-        return (int) ((y - y0) / (cellHeight + MARGIN));
+        return (int) ((y - y0 - 30) / (cellHeight + MARGIN));
     }
 
     /**

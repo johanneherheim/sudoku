@@ -47,7 +47,7 @@ public class ScoreUtils {
     public List<Score> getScoreFromUser(String username) {
         List<Score> scoreData = new ArrayList<Score>();
         for (Score score : getAllScores()) {
-            if (score.getUsername().equals(username)) {
+            if (score.username().equals(username)) {
                 scoreData.add(score);
             }
         }
@@ -76,29 +76,20 @@ public class ScoreUtils {
         }
     }
 
-    public List<Score> sortByTime(List<Score> scores) {
-        Comparator<Score> timeComparator = new Comparator<Score>() {
-            @Override
-            public int compare(Score s1, Score s2) {
-                // Compare by time used (elapsed time)
-                return Integer.compare(s1.getSeconds(), s2.getSeconds());
-            }
-        };
-
-        Collections.sort(scores, timeComparator);
-
-        return scores;
-    }
-
-    public List<Score> sortByLifesAndTime(List<Score> scores) {
+    public List<Score> sortScores(List<Score> scores) {
         Comparator<Score> lifesAndTimeComparator = new Comparator<Score>() {
             @Override
             public int compare(Score s1, Score s2) {
                 // Compare by lifes used in descending order
-                int lifesComparison = Integer.compare(s2.getLifesUsed(), s1.getLifesUsed());
-                // If the lifes used are the same, compare by time used
+                int lifesComparison = Integer.compare(s2.lifesUsed(), s1.lifesUsed());
+                // If the lifes used are the same, compare by difficulty in reverse order
                 if (lifesComparison == 0) {
-                    return Integer.compare(s1.getSeconds(), s2.getSeconds());
+                    int difficultyComparison = Integer.compare(s2.difficulty(), s1.difficulty());
+                    // If the difficulty is the same, compare by time used
+                    if (difficultyComparison == 0) {
+                        return Integer.compare(s1.timeUsed(), s2.timeUsed());
+                    }
+                    return difficultyComparison;
                 }
                 return lifesComparison;
             }
@@ -109,4 +100,5 @@ public class ScoreUtils {
         }
         return scores;
     }
+
 }

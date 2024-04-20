@@ -8,12 +8,12 @@ import no.uib.inf101.sudoku.model.GameState;
 import no.uib.inf101.sudoku.view.GameView;
 import no.uib.inf101.sudoku.view.tools.CellPositionToPixelConverter;
 
-public class SudokuMouseController implements MouseListener {
+public class MouseController implements MouseListener {
 
     private ControllableSudokuModel model;
     private GameView view;
 
-    public SudokuMouseController(ControllableSudokuModel model, GameView view) {
+    public MouseController(ControllableSudokuModel model, GameView view) {
         this.model = model;
         this.view = view;
         view.addMouseListener(this);

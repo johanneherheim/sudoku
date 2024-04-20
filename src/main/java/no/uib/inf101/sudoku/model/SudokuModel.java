@@ -8,9 +8,9 @@ import no.uib.inf101.sudoku.dao.ScoreUtils;
 import no.uib.inf101.sudoku.view.ViewableSudokuModel;
 
 public class SudokuModel implements ViewableSudokuModel, ControllableSudokuModel {
-    private static SudokuBoard board;
-    private static Generator generator;
-    private static CellPosition selectedCell;
+    private SudokuBoard board;
+    private Generator generator;
+    private CellPosition selectedCell;
     private GameState gameState;
     private ScoreUtils scoreQueries = new ScoreUtils();
     private String username;
@@ -20,7 +20,7 @@ public class SudokuModel implements ViewableSudokuModel, ControllableSudokuModel
 
     public SudokuModel(String username) {
         gameState = GameState.WELCOME;
-        this.difficulty = Difficulty.EASY;
+        difficulty = Difficulty.EASY;
         this.username = username;
         selectedCell = new CellPosition(0, 0);
     }
@@ -71,6 +71,7 @@ public class SudokuModel implements ViewableSudokuModel, ControllableSudokuModel
 
     @Override
     public boolean isSolved() {
+        // compare the solution with the current board
         for (int row = 0; row < board.getRows(); row++) {
             for (int col = 0; col < board.getCols(); col++) {
                 if (board.getSolution()[row][col] != board.getNumber(row, col)) {
@@ -78,19 +79,24 @@ public class SudokuModel implements ViewableSudokuModel, ControllableSudokuModel
                 }
             }
         }
-        scoreQueries.insertScore(username, 0, time, lifes, 0, generator.getPlayableBoard(),
-                generator.getSolvedBoard(), generator.getDifficulty(difficulty));
+        // If the board is solved, set the game state to finished
         gameState = GameState.FINISHED;
         return true;
     }
 
+    public void saveGame() {
+        scoreQueries.insertScore(username, 0, time, lifes, 0, generator.getPlayableBoard(),
+                generator.getSolvedBoard(), generator.difficultyEnumToId(difficulty));
+    }
+
     public void start(Difficulty difficulty) {
         this.difficulty = difficulty;
+        lifes = 3;
         gameState = GameState.PLAYING;
+
         generator = new Generator(difficulty);
         generator.generateBoard();
         board = new SudokuBoard(generator.getPlayableBoard(), generator.getSolvedBoard());
-        lifes = 3;
     }
 
     public Difficulty getDifficulty() {
@@ -119,6 +125,6 @@ public class SudokuModel implements ViewableSudokuModel, ControllableSudokuModel
                 return gridCell;
             }
         }
-        return null;
+        throw new IllegalArgumentException("This cell does not exist in the board.");
     }
 }
