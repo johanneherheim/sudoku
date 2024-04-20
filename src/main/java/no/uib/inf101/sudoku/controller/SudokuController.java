@@ -108,9 +108,7 @@ public class SudokuController implements KeyListener, ActionListener, MouseListe
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == view.getStartButton()
-                || e.getSource() == view.getBackButton1()
-                || e.getSource() == view.getBackButton2()
-                || e.getSource() == view.getNoSaveButton()) {
+                || e.getSource() == view.getBackButton()) {
             view.goToMenu();
 
         } else if (e.getSource() == view.getEasyButton()) {
@@ -143,6 +141,8 @@ public class SudokuController implements KeyListener, ActionListener, MouseListe
         } else if (e.getSource() == view.getSaveButton()) {
             view.save();
 
+        } else if (e.getSource() == view.getLogoutButton()) {
+            view.logout();
         }
     }
 

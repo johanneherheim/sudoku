@@ -66,15 +66,13 @@ public class GameView extends JFrame {
             leaderboardButton = new JButton("Topplista"),
             toggleLightModeButton = new JButton("🌞"),
 
-            backButton1 = new JButton("Tilbake"),
-            backButton2 = new JButton("Tilbake"),
+            backButton = new JButton("Tilbake"),
             saveButton = new JButton("Lagre"),
-            noSaveButton = new JButton("Ikkje lagre");
+            logoutButton = new JButton("Logg ut");
 
     ArrayList<JButton> allButtons = new ArrayList<JButton>(
-            List.of(startButton, easyButton, mediumButton, hardButton, pauseButton, resumeButton,
-                    exitButton, myScoresButton, leaderboardButton, backButton1, backButton2, toggleLightModeButton,
-                    saveButton, noSaveButton));
+            List.of(startButton, easyButton, mediumButton, hardButton, pauseButton, resumeButton, exitButton,
+                    myScoresButton, leaderboardButton, backButton, toggleLightModeButton, saveButton, logoutButton));
 
     JPanel welcomeScreen = new JPanel(null),
             menuScreen = new JPanel(null),
@@ -92,6 +90,9 @@ public class GameView extends JFrame {
     GamePanel leaderboardPanel = new GamePanel();
     GamePanel menuPanel = new GamePanel();
     GamePanel welcomePanel = new GamePanel();
+
+    ArrayList<GamePanel> allGamePanels = new ArrayList<GamePanel>(
+            List.of(playingPanel, myScoresPanel, leaderboardPanel, menuPanel, welcomePanel));
 
     public GameView(String username) {
 
@@ -400,12 +401,8 @@ public class GameView extends JFrame {
         return leaderboardButton;
     }
 
-    public JButton getBackButton1() {
-        return backButton1;
-    }
-
-    public JButton getBackButton2() {
-        return backButton2;
+    public JButton getBackButton() {
+        return backButton;
     }
 
     public JButton getToggleLightModeButton() {
@@ -416,11 +413,11 @@ public class GameView extends JFrame {
         return resumeButton;
     }
 
-    public JButton getNoSaveButton() {
-        return noSaveButton;
+    public JButton getLogoutButton() {
+        return logoutButton;
     }
-    // BUTTON ACTIONS
 
+    // BUTTON ACTIONS
     public void goToMenu() {
         // adding title for buttons
         JLabel difficultyText = new JLabel(" Nytt spill: ");
@@ -438,6 +435,8 @@ public class GameView extends JFrame {
         menuPanel.setBackground(colorTheme.getBackgroundColor());
 
         // butting the buttons where i want
+        backButton.setText("Tilbake");
+        backButton.setForeground(getForeground());
         menuScreen.add(difficultyText);
         menuScreen.add(resultText);
         easyButton.setBounds(100, 350, 100, 30);
@@ -448,8 +447,8 @@ public class GameView extends JFrame {
         leaderboardButton.setBounds(250, 450, 120, 30);
         toggleLightModeButton.setBounds(510, 10, 40, 30);
         exitButton.setBounds(450, 670, 100, 30);
+        logoutButton.setBounds(10, 670, 100, 30);
         exitButton.setForeground(Color.RED);
-        exitButton.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
         menuScreen.add(easyButton);
         menuScreen.add(mediumButton);
         menuScreen.add(hardButton);
@@ -457,6 +456,7 @@ public class GameView extends JFrame {
         menuScreen.add(leaderboardButton);
         menuScreen.add(toggleLightModeButton);
         menuScreen.add(exitButton);
+        menuScreen.add(logoutButton);
 
         menuScreen.add(menuPanel);
         model.setGameState(GameState.MENU);
@@ -499,8 +499,8 @@ public class GameView extends JFrame {
     }
 
     public void myScores() {
-        backButton1.setBounds(10, 10, 100, 30);
-        myScoresScreen.add(backButton1);
+        backButton.setBounds(10, 10, 100, 30);
+        myScoresScreen.add(backButton);
         myScoresPanel.setBounds(0, 0, BOARD_WIDTH + OUTER_MARGIN * 2,
                 BOARD_WIDTH + OUTER_MARGIN * 2 + HEADER_HEIGHT + OUTER_MARGIN);
         myScoresScreen.add(myScoresPanel);
@@ -511,8 +511,8 @@ public class GameView extends JFrame {
     }
 
     public void leaderBoard() {
-        backButton2.setBounds(10, 10, 100, 30);
-        leaderboardScreen.add(backButton2);
+        backButton.setBounds(10, 10, 100, 30);
+        leaderboardScreen.add(backButton);
         leaderboardPanel.setBounds(0, 0, BOARD_WIDTH + OUTER_MARGIN * 2,
                 BOARD_WIDTH + OUTER_MARGIN * 2 + HEADER_HEIGHT + OUTER_MARGIN);
         leaderboardScreen.add(leaderboardPanel);
@@ -541,13 +541,14 @@ public class GameView extends JFrame {
         gif.setBounds(30, 150, 500, 400);
         saveButton.setBounds(getWidth() / 2 - 115, 600, 100, 30);
         saveButton.setForeground(new Color(14, 161, 86));
-        noSaveButton.setBounds(getWidth() / 2 + 15, 600, 100, 30);
-        noSaveButton.setForeground(Color.RED);
+        backButton.setBounds(getWidth() / 2 + 15, 600, 100, 30);
+        backButton.setForeground(Color.RED);
+        backButton.setText("Ikkje lagre");
 
         gameoverScreen.add(title);
         gameoverScreen.add(gif);
         gameoverScreen.add(saveButton);
-        gameoverScreen.add(noSaveButton);
+        gameoverScreen.add(backButton);
         model.setGameState(GameState.FINISHED);
         System.out.println("Game state: " + model.getGameState());
 
@@ -558,6 +559,12 @@ public class GameView extends JFrame {
         System.out.println("Saving score ...");
         System.out.println("Game state: " + model.getGameState());
         goToMenu();
+    }
+
+    public void logout() {
+        System.out.println("Logging out ...");
+        dispose();
+        new LoginPage();
     }
 
     public void updateQueries() {
@@ -574,11 +581,11 @@ public class GameView extends JFrame {
                 if (component instanceof JLabel) {
                     JLabel label = (JLabel) component;
                     label.setForeground(colorTheme.getTextColor());
-                } else if (component instanceof GamePanel) {
-                    GamePanel gamePanel = (GamePanel) component;
-                    gamePanel.setBackground(colorTheme.getBackgroundColor());
                 }
             }
+        }
+        for (GamePanel gamePanel : allGamePanels) {
+            gamePanel.setBackground(colorTheme.getBackgroundColor());
         }
         toggleLightModeButton.setText(isDefaultColorTheme ? "🌙" : "🌞");
         isDefaultColorTheme = !isDefaultColorTheme;
