@@ -20,7 +20,7 @@ public class SudokuBoardTest {
                 "1234",
                 "3412",
                 "2143",
-                "4321"
+                "4321\n"
         });
         assertEquals(expected, sudokuBoard.prettyString());
     }

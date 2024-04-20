@@ -12,9 +12,7 @@ import java.util.Stack;
 import javax.swing.*;
 
 import no.uib.inf101.grid.GridCell;
-import no.uib.inf101.sudoku.controller.ButtonController;
-import no.uib.inf101.sudoku.controller.MouseController;
-import no.uib.inf101.sudoku.controller.KeyboardController;
+import no.uib.inf101.sudoku.controller.SudokuController;
 import no.uib.inf101.sudoku.dao.ScoreUtils;
 import no.uib.inf101.sudoku.model.Difficulty;
 import no.uib.inf101.sudoku.model.GameState;
@@ -52,12 +50,7 @@ public class GameView extends JFrame {
     private ScoreUtils scoreQueries = new ScoreUtils();
     private List<Score> allScores, userScores;
 
-    // controllers
-    private ButtonController buttonController;
-    @SuppressWarnings("unused")
-    private KeyboardController keyboardController;
-    @SuppressWarnings("unused")
-    private MouseController mouseController;
+    SudokuController controller;
 
     JButton startButton = new JButton("Start"),
 
@@ -76,7 +69,7 @@ public class GameView extends JFrame {
             backButton1 = new JButton("Tilbake"),
             backButton2 = new JButton("Tilbake"),
             saveButton = new JButton("Lagre"),
-            noSaveButton = new JButton("Ikke lagre");
+            noSaveButton = new JButton("Ikkje lagre");
 
     ArrayList<JButton> allButtons = new ArrayList<JButton>(
             List.of(startButton, easyButton, mediumButton, hardButton, pauseButton, resumeButton,
@@ -97,6 +90,8 @@ public class GameView extends JFrame {
     GamePanel playingPanel = new GamePanel();
     GamePanel myScoresPanel = new GamePanel();
     GamePanel leaderboardPanel = new GamePanel();
+    GamePanel menuPanel = new GamePanel();
+    GamePanel welcomePanel = new GamePanel();
 
     public GameView(String username) {
 
@@ -106,9 +101,7 @@ public class GameView extends JFrame {
 
         model = new SudokuModel(username);
 
-        buttonController = new ButtonController(this);
-        mouseController = new MouseController(model, this);
-        keyboardController = new KeyboardController(model, this);
+        controller = new SudokuController(model, this);
 
         name = username;
         allScores = scoreQueries.getAllScores();
@@ -121,9 +114,16 @@ public class GameView extends JFrame {
         toggleLightMode();
         addActionListeners();
 
+        welcomePanel.setBounds(0, 0, BOARD_WIDTH + OUTER_MARGIN * 2,
+                BOARD_WIDTH + OUTER_MARGIN * 2 + HEADER_HEIGHT + OUTER_MARGIN);
+        welcomePanel.setBackground(colorTheme.getBackgroundColor());
+
         // adding startbutton to welcome screen
-        startButton.setBounds(getWidth() / 2 - 75, 275, 150, 50);
+        startButton.setBounds(getWidth() / 2 - 75, 400, 150, 50);
+        startButton.setLayout(null);
+        startButton.setContentAreaFilled(false);
         welcomeScreen.add(startButton);
+        welcomeScreen.add(welcomePanel);
 
         cardPanel.add(welcomeScreen, "1");
         cardPanel.add(menuScreen, "2");
@@ -142,7 +142,7 @@ public class GameView extends JFrame {
 
     private void addActionListeners() {
         for (JButton button : allButtons) {
-            button.addActionListener(buttonController);
+            button.addActionListener(controller);
             button.setFocusable(false);
         }
     }
@@ -180,23 +180,17 @@ public class GameView extends JFrame {
     private void drawGame(Graphics2D g2) {
         if (model.getGameState() == GameState.FINISHED) {
             finished();
-        }
-
-        if (model.getGameState() == GameState.MY_SCORES) {
+        } else if (model.getGameState() == GameState.MY_SCORES) {
             cardLayout.show(cardPanel, "5");
-            updateQuereies();
+            updateQueries();
             drawHeader(g2, "Dine resultater");
             drawScores(g2, userScores, true);
-        }
-
-        if (model.getGameState() == GameState.LEADERBOARD) {
+        } else if (model.getGameState() == GameState.LEADERBOARD) {
             cardLayout.show(cardPanel, "6");
-            updateQuereies();
+            updateQueries();
             drawHeader(g2, "Topplista");
             drawScores(g2, allScores, false);
-        }
-
-        if (model.getGameState() == GameState.PLAYING) {
+        } else if (model.getGameState() == GameState.PLAYING) {
             cardLayout.show(cardPanel, "3");
             CellPositionToPixelConverter converter = new CellPositionToPixelConverter(
                     getBoardCanvas(), model.getDimension(), INNER_MARGIN);
@@ -206,6 +200,14 @@ public class GameView extends JFrame {
             for (GridCell cell : model.getAllTiles()) {
                 drawCell(g2, cell, converter);
             }
+        } else if (model.getGameState() == GameState.MENU) {
+            cardLayout.show(cardPanel, "2");
+            drawHeader(g2, "MENY");
+        } else if (model.getGameState() == GameState.WELCOME) {
+            cardLayout.show(cardPanel, "1");
+            drawHeader(g2, "SUDOKU");
+            drawText(g2, "Velkommen, " + name + "!");
+
         }
         model.setTime(secondsPassed);
     }
@@ -236,9 +238,15 @@ public class GameView extends JFrame {
 
     private void drawHeader(Graphics2D g2, String text) {
         g2.setColor(colorTheme.getTextColor());
-        g2.setFont(new Font(FONT, Font.BOLD, Math.min(getWidth() / 10, getHeight() / 10)));
+        g2.setFont(new Font(FONT, Font.BOLD, 70));
         Inf101Graphics.drawCenteredString(g2, text, 0, 0, getWidth(),
                 HEADER_HEIGHT + OUTER_MARGIN);
+    }
+
+    private void drawText(Graphics2D g2, String text) {
+        g2.setColor(colorTheme.getTextColor());
+        g2.setFont(new Font(FONT, Font.BOLD, 20));
+        Inf101Graphics.drawCenteredString(g2, text, 0, 0, getWidth(), 350);
     }
 
     public String formatTime(int seconds) {
@@ -425,13 +433,17 @@ public class GameView extends JFrame {
         resultText.setFont(new Font(FONT, Font.BOLD, 15));
         resultText.setForeground(colorTheme.getTextColor());
 
+        menuPanel.setBounds(0, 0, BOARD_WIDTH + OUTER_MARGIN * 2,
+                BOARD_WIDTH + OUTER_MARGIN * 2 + HEADER_HEIGHT + OUTER_MARGIN);
+        menuPanel.setBackground(colorTheme.getBackgroundColor());
+
         // butting the buttons where i want
         menuScreen.add(difficultyText);
         menuScreen.add(resultText);
         easyButton.setBounds(100, 350, 100, 30);
         mediumButton.setBounds(230, 350, 100, 30);
         hardButton.setBounds(360, 350, 100, 30);
-        resumeButton.setBounds(10, 10, 100, 30);
+        resumeButton.setBounds(10, 10, 75, 30);
         myScoresButton.setBounds(100, 450, 120, 30);
         leaderboardButton.setBounds(250, 450, 120, 30);
         toggleLightModeButton.setBounds(510, 10, 40, 30);
@@ -445,11 +457,14 @@ public class GameView extends JFrame {
         menuScreen.add(leaderboardButton);
         menuScreen.add(toggleLightModeButton);
         menuScreen.add(exitButton);
+
+        menuScreen.add(menuPanel);
         model.setGameState(GameState.MENU);
         changeCard("2");
     }
 
     public void start(Difficulty difficulty) {
+        menuScreen.remove(menuPanel);
         // initialize pause button
         pauseButton.setBounds(10, 10, 70, 30);
         playingScreen.add(pauseButton);
@@ -468,6 +483,7 @@ public class GameView extends JFrame {
 
     public void pause() {
         menuScreen.add(resumeButton);
+        menuScreen.add(menuPanel);
         model.setGameState(GameState.MENU);
         changeCard("2");
         System.out.println("Pausing game ...");
@@ -506,12 +522,6 @@ public class GameView extends JFrame {
         System.out.println("Game state: " + model.getGameState());
     }
 
-    public void backToMenu() {
-        model.setGameState(GameState.MENU);
-        changeCard("2");
-        System.out.println("Game state: " + model.getGameState());
-    }
-
     public void finished() {
         cardLayout.show(cardPanel, "4");
         JLabel title = new JLabel();
@@ -526,14 +536,12 @@ public class GameView extends JFrame {
             gif.setIcon(winningIcon);
         }
         title.setForeground(colorTheme.getTextColor());
-        title.setFont(new Font(FONT, Font.BOLD, 20));
+        title.setFont(new Font(FONT, Font.BOLD, 30));
         title.setBounds(30, 100, 200, 50);
         gif.setBounds(30, 150, 500, 400);
         saveButton.setBounds(getWidth() / 2 - 115, 600, 100, 30);
-        saveButton.setBorder(BorderFactory.createLineBorder(Color.GREEN, 2));
-        saveButton.setForeground(Color.GREEN);
+        saveButton.setForeground(new Color(14, 161, 86));
         noSaveButton.setBounds(getWidth() / 2 + 15, 600, 100, 30);
-        noSaveButton.setBorder(BorderFactory.createLineBorder(Color.RED, 2));
         noSaveButton.setForeground(Color.RED);
 
         gameoverScreen.add(title);
@@ -552,7 +560,7 @@ public class GameView extends JFrame {
         goToMenu();
     }
 
-    public void updateQuereies() {
+    public void updateQueries() {
         scoreQueries = new ScoreUtils();
         allScores = scoreQueries.getAllScores();
         userScores = scoreQueries.getScoreFromUser(name);
@@ -562,10 +570,17 @@ public class GameView extends JFrame {
         colorTheme = isDefaultColorTheme ? new LightColorTheme() : new DefaultColorTheme();
         for (JPanel panel : allPanels) {
             panel.setBackground(colorTheme.getBackgroundColor());
+            for (Component component : panel.getComponents()) {
+                if (component instanceof JLabel) {
+                    JLabel label = (JLabel) component;
+                    label.setForeground(colorTheme.getTextColor());
+                } else if (component instanceof GamePanel) {
+                    GamePanel gamePanel = (GamePanel) component;
+                    gamePanel.setBackground(colorTheme.getBackgroundColor());
+                }
+            }
         }
-        playingPanel.setBackground(colorTheme.getBackgroundColor());
-        myScoresPanel.setBackground(colorTheme.getBackgroundColor());
-        leaderboardPanel.setBackground(colorTheme.getBackgroundColor());
+        toggleLightModeButton.setText(isDefaultColorTheme ? "🌙" : "🌞");
         isDefaultColorTheme = !isDefaultColorTheme;
     }
 }
