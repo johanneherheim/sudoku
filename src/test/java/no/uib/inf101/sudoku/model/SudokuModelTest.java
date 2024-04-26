@@ -10,11 +10,11 @@ import no.uib.inf101.grid.GridCell;
 public class SudokuModelTest {
 
     @Test
-    public void testInitialState() {
+    public void testStart() {
 
         SudokuModel sudokuModel = new SudokuModel("Test Testesen");
 
-        // Welcome screen
+        // First gamestate should be WELCOME
         assertEquals(GameState.WELCOME, sudokuModel.getGameState());
 
         // The user starts the game by choosing a difficulty
@@ -22,19 +22,21 @@ public class SudokuModelTest {
         SudokuBoard easyBoard1 = sudokuModel.getBoard();
         assertEquals(Difficulty.EASY, sudokuModel.getDifficulty());
 
+        // The user starts a new game with the same difficulty
         sudokuModel.start(Difficulty.EASY);
         SudokuBoard easyBoard2 = sudokuModel.getBoard();
         assertEquals(Difficulty.EASY, sudokuModel.getDifficulty());
 
-        // The user starts a different game
+        // The user starts a new game with a different difficulty
         sudokuModel.start(Difficulty.MEDIUM);
         SudokuBoard mediumBoard = sudokuModel.getBoard();
         assertEquals(Difficulty.MEDIUM, sudokuModel.getDifficulty());
 
-        // the model generates different boards when starting on new
+        // the model generates different boards every time
         assertNotEquals(easyBoard1, mediumBoard);
         assertNotEquals(easyBoard1, easyBoard2);
 
+        // The selected cell should start at (0, 0)
         assertEquals(new CellPosition(0, 0), sudokuModel.getSelectedCell());
     }
 
