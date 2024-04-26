@@ -94,6 +94,9 @@ public class GameView extends JFrame {
     ArrayList<GamePanel> allGamePanels = new ArrayList<GamePanel>(
             List.of(playingPanel, myScoresPanel, leaderboardPanel, menuPanel, welcomePanel));
 
+    JLabel title = new JLabel();
+    JLabel gif = new JLabel();
+
     public GameView(String username) {
 
         setTitle("Sudoku");
@@ -524,8 +527,6 @@ public class GameView extends JFrame {
 
     public void finished() {
         cardLayout.show(cardPanel, "4");
-        JLabel title = new JLabel();
-        JLabel gif = new JLabel();
         if (model.getLifes() == 0) {
             title.setText("Du tapte!");
             ImageIcon losingIcon = new ImageIcon("src/main/resources/gif/looser.gif");

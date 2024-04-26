@@ -5,11 +5,16 @@ import java.util.Collections;
 import java.util.List;
 
 public class Generator {
+    private static final int EASY_CELLS_REMOVED = 1;
+    private static final int MEDIUM_CELLS_REMOVED = 40;
+    private static final int HARD_CELLS_REMOVED = 55;
+
     private static final int SIZE = 9;
     private static final int EMPTY = 0;
     Difficulty difficulty;
     private static int[][] solvedBoard;
     private static int[][] playableBoard;
+    Solver solver = new Solver();
 
     public Generator(Difficulty difficulty) {
         this.difficulty = difficulty;
@@ -67,14 +72,17 @@ public class Generator {
                 count++;
             }
         }
-    }
-
-    public void printBoard() {
+        int[][] tempBoard = new int[SIZE][SIZE];
         for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                System.out.print(solvedBoard[i][j] + " ");
-            }
-            System.out.println();
+            tempBoard[i] = Arrays.copyOf(playableBoard[i], SIZE);
+        }
+
+        // Generating a new board if the board is unsolvable
+        if (!solver.isSolvable(tempBoard, solvedBoard)) {
+            System.out.println("Unsolvable board, generating new board ...");
+            makeBoardPlayable(difficulty);
+        } else {
+            System.out.println("Board generated successfully!");
         }
     }
 
@@ -89,13 +97,22 @@ public class Generator {
     public Integer difficultyEnumToId(Difficulty difficulty) {
         switch (difficulty) {
             case EASY:
-                return 1;
+                return EASY_CELLS_REMOVED;
             case MEDIUM:
-                return 2;
+                return MEDIUM_CELLS_REMOVED;
             case HARD:
-                return 3;
+                return HARD_CELLS_REMOVED;
             default:
                 throw new IllegalArgumentException("Unsupported difficulty: " + difficulty);
+        }
+    }
+
+    public static void printBoard(int[][] board) {
+        for (int row = 0; row < SIZE; row++) {
+            for (int column = 0; column < SIZE; column++) {
+                System.out.print(board[row][column] + " ");
+            }
+            System.out.println();
         }
     }
 }
