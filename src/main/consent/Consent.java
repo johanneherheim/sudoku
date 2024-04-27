@@ -5,7 +5,8 @@ package no.uib.inf101;
  * 2 in teaching of computer science to future studenents at the Department of
  * Informatics, University of Bergen.
  * 
- * The video sharing consent is only applicable if you produced a video for semesteroppgave 2.
+ * The video sharing consent is only applicable if you produced a video for
+ * semesteroppgave 2.
  */
 public class Consent {
 

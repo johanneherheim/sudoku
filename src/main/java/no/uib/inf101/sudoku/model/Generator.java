@@ -10,7 +10,7 @@ import java.util.List;
 public class Generator {
 
     // Number of cells removed
-    private static final int EASY_CELLS_REMOVED = 1;
+    private static final int EASY_CELLS_REMOVED = 30;
     private static final int MEDIUM_CELLS_REMOVED = 40;
     private static final int HARD_CELLS_REMOVED = 55;
 

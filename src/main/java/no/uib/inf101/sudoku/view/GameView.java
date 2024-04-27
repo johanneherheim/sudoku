@@ -56,7 +56,7 @@ public class GameView extends JFrame {
 
             easyButton = new JButton("Lett"),
             mediumButton = new JButton("Middels"),
-            hardButton = new JButton("Vanskelig"),
+            hardButton = new JButton("Vanskeleg"),
 
             pauseButton = new JButton("Pause"),
 
@@ -67,7 +67,7 @@ public class GameView extends JFrame {
             toggleLightModeButton = new JButton("🌞"),
 
             backButton = new JButton("Tilbake"),
-            saveButton = new JButton("Lagre"),
+            saveButton = new JButton("Lagra"),
             logoutButton = new JButton("Logg ut");
 
     ArrayList<JButton> allButtons = new ArrayList<JButton>(
@@ -96,6 +96,7 @@ public class GameView extends JFrame {
 
     JLabel title = new JLabel();
     JLabel gif = new JLabel();
+    JLabel saveText = new JLabel("Vil du lagra resultatet?");
 
     public GameView(String username) {
 
@@ -187,7 +188,7 @@ public class GameView extends JFrame {
         } else if (model.getGameState() == GameState.MY_SCORES) {
             cardLayout.show(cardPanel, "5");
             updateQueries();
-            drawHeader(g2, "Dine resultater");
+            drawHeader(g2, "Dine resultat");
             drawScores(g2, userScores, true);
         } else if (model.getGameState() == GameState.LEADERBOARD) {
             cardLayout.show(cardPanel, "6");
@@ -210,7 +211,7 @@ public class GameView extends JFrame {
         } else if (model.getGameState() == GameState.WELCOME) {
             cardLayout.show(cardPanel, "1");
             drawHeader(g2, "SUDOKU");
-            drawText(g2, "Velkommen, " + name + "!");
+            drawText(g2, "Velkomen, " + name + "!");
 
         }
         model.setTime(secondsPassed);
@@ -371,7 +372,7 @@ public class GameView extends JFrame {
     // BUTTON ACTIONS
     public void goToMenu() {
         // adding title for buttons
-        JLabel difficultyText = new JLabel(" Nytt spill: ");
+        JLabel difficultyText = new JLabel(" Nytt spel: ");
         difficultyText.setBounds(100, 310, 300, 30);
         difficultyText.setFont(new Font(FONT, Font.BOLD, 15));
         difficultyText.setForeground(colorTheme.getTextColor());
@@ -480,7 +481,7 @@ public class GameView extends JFrame {
             ImageIcon losingIcon = new ImageIcon("src/main/resources/gif/looser.gif");
             gif.setIcon(losingIcon);
         } else {
-            title.setText("Gratulerer!");
+            title.setText("Gratulera!");
             ImageIcon winningIcon = new ImageIcon("src/main/resources/gif/winning.gif");
             gif.setIcon(winningIcon);
         }
@@ -488,13 +489,16 @@ public class GameView extends JFrame {
         title.setFont(new Font(FONT, Font.BOLD, 30));
         title.setBounds(30, 100, 200, 50);
         gif.setBounds(30, 150, 500, 400);
+        saveText.setForeground(colorTheme.getTextColor());
+        saveText.setFont(new Font(FONT, Font.BOLD, 20));
+        saveText.setBounds(30, 550, 400, 30);
         saveButton.setBounds(getWidth() / 2 - 115, 600, 100, 30);
         saveButton.setForeground(new Color(14, 161, 86));
         backButton.setBounds(getWidth() / 2 + 15, 600, 100, 30);
         backButton.setForeground(Color.RED);
-        backButton.setText("Ikkje lagre");
-
+        backButton.setText("Ikkje lagra");
         gameoverScreen.add(title);
+        gameoverScreen.add(saveText);
         gameoverScreen.add(gif);
         gameoverScreen.add(saveButton);
         gameoverScreen.add(backButton);

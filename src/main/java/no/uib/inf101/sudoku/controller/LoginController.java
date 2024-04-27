@@ -53,14 +53,14 @@ public class LoginController implements KeyListener, ActionListener {
         String username = loginPage.getUsername();
         String password = loginPage.getPassword();
 
-        if (loginPage.getPasswordToUser(username).equals(hash(password))) {
-            loginPage.launchApplication(username);
+        if (usernameExists(username)) {
+            if (loginPage.getPasswordToUser(username).equals(hash(password))) {
+                loginPage.launchApplication(username);
+            } else {
+                loginPage.setMessage("Feil passord");
+                loginPage.clearFields(false, true);
+            }
         } else {
-            loginPage.setMessage("Feil passord");
-            loginPage.clearFields(false, true);
-        }
-
-        if (!usernameExists(username)) {
             loginPage.setMessage("Brukarnamnet finst ikkje");
             loginPage.clearFields(true, true);
         }
