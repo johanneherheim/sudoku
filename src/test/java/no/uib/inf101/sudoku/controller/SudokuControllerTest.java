@@ -14,7 +14,7 @@ public class SudokuControllerTest {
 
     @Test
     public void sanityTest() {
-        sudokuModel.start(Difficulty.EASY);
+        sudokuModel.startGame(Difficulty.EASY);
         assertEquals(new CellPosition(0, 0), sudokuModel.getSelectedCell());
     }
 }

@@ -18,17 +18,17 @@ public class SudokuModelTest {
         assertEquals(GameState.WELCOME, sudokuModel.getGameState());
 
         // The user starts the game by choosing a difficulty
-        sudokuModel.start(Difficulty.EASY);
+        sudokuModel.startGame(Difficulty.EASY);
         SudokuBoard easyBoard1 = sudokuModel.getBoard();
         assertEquals(Difficulty.EASY, sudokuModel.getDifficulty());
 
         // The user starts a new game with the same difficulty
-        sudokuModel.start(Difficulty.EASY);
+        sudokuModel.startGame(Difficulty.EASY);
         SudokuBoard easyBoard2 = sudokuModel.getBoard();
         assertEquals(Difficulty.EASY, sudokuModel.getDifficulty());
 
         // The user starts a new game with a different difficulty
-        sudokuModel.start(Difficulty.MEDIUM);
+        sudokuModel.startGame(Difficulty.MEDIUM);
         SudokuBoard mediumBoard = sudokuModel.getBoard();
         assertEquals(Difficulty.MEDIUM, sudokuModel.getDifficulty());
 
@@ -80,7 +80,7 @@ public class SudokuModelTest {
 
         assertEquals(GameState.WELCOME, sudokuModel.getGameState());
 
-        sudokuModel.start(Difficulty.EASY);
+        sudokuModel.startGame(Difficulty.EASY);
         assertEquals(GameState.PLAYING, sudokuModel.getGameState());
 
         for (GridCell cell : sudokuModel.getAllTiles()) {
@@ -110,7 +110,7 @@ public class SudokuModelTest {
     @Test
     public void testIsSolved() {
         SudokuModel sudokuModel = new SudokuModel("Test Testesen");
-        sudokuModel.start(Difficulty.EASY);
+        sudokuModel.startGame(Difficulty.EASY);
 
         assertFalse(sudokuModel.isSolved());
 
