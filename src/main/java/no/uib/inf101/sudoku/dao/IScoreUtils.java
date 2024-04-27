@@ -49,4 +49,10 @@ public interface IScoreUtils {
      */
     List<Score> sortScores(List<Score> scores);
 
+    /**
+     * Deletes all scores from a specific user.
+     * 
+     * @param username the username of the user
+     */
+    void deleteScoreToUser(String username);
 }

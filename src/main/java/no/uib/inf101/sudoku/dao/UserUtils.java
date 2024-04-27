@@ -55,4 +55,19 @@ public class UserUtils implements IUserUtils {
         }
         throw new RuntimeException("User not found");
     }
+
+    @Override
+    public void removeUser(String username) {
+        List<User> users = getAllUsers();
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("src/main/resources/db/user.csv"))) {
+            bw.write("username,password\n");
+            for (User user : users) {
+                if (!user.username().equals(username)) {
+                    bw.write(user.username() + "," + user.password() + "\n");
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error removing user: " + e.getMessage());
+        }
+    }
 }

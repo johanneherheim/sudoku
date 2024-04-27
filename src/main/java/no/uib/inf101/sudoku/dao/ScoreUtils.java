@@ -105,4 +105,21 @@ public class ScoreUtils implements IScoreUtils {
         return scores;
     }
 
+    @Override
+    public void deleteScoreToUser(String username) {
+        List<Score> scores = getAllScores();
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter("src/main/resources/db/score.csv"))) {
+            bw.write("username,score,finishedAt,timeUsed,lifesUsed,hintsUsed,startBoard,solvedBoard,difficulty\n");
+            for (Score score : scores) {
+                if (!score.username().equals(username)) {
+                    bw.write(score.username() + "," + score.score() + "," + score.finishedAt() + "," + score.timeUsed()
+                            + "," + score.lifesUsed() + "," + score.hintsUsed() + "," + score.startBoard() + ","
+                            + score.solvedBoard() + "," + score.difficulty() + "\n");
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error removing user: " + e.getMessage());
+        }
+    }
+
 }

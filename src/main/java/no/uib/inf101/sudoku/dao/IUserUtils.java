@@ -15,7 +15,7 @@ public interface IUserUtils {
      * 
      * @return A list of all users.
      */
-    public List<User> getAllUsers();
+    List<User> getAllUsers();
 
     /**
      * Retrieves a specific user from the database based on the given username.
@@ -23,7 +23,7 @@ public interface IUserUtils {
      * @param username The username of the user to retrieve.
      * @return The User object representing the retrieved user.
      */
-    public User getUser(String username);
+    User getUser(String username);
 
     /**
      * Inserts a new user into the database with the given username and password.
@@ -31,6 +31,12 @@ public interface IUserUtils {
      * @param username The username of the new user.
      * @param password The password of the new user.
      */
-    public void insertUser(String username, String password);
+    void insertUser(String username, String password);
 
+    /**
+     * Deletes a user from the database based on the given username.
+     * 
+     * @param username The username of the user to delete.
+     */
+    void removeUser(String username);
 }
