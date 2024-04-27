@@ -13,11 +13,26 @@ import no.uib.inf101.sudoku.model.GameState;
 import no.uib.inf101.sudoku.view.GameView;
 import no.uib.inf101.sudoku.view.tools.CellPositionToPixelConverter;
 
+/**
+ * The controller for the sudoku game, handling user input and game logic. The
+ * controller is connected to the game view and the sudoku model and implements
+ * KeyListener, ActionListener and MouseListener.
+ */
 public class SudokuController implements KeyListener, ActionListener, MouseListener {
 
+    /** The model that the controller is connected to */
     private ControllableSudokuModel model;
+
+    /** The view that the controller is connected to */
     private GameView view;
 
+    /**
+     * Constructor for the SudokuController. It adds the controller as a listener to
+     * the view and sets the view to be focusable.
+     * 
+     * @param model the model that the controller is connected to
+     * @param view  the view that the controller is connected to
+     */
     public SudokuController(ControllableSudokuModel model, GameView view) {
         this.model = model;
         this.view = view;
@@ -147,19 +162,6 @@ public class SudokuController implements KeyListener, ActionListener, MouseListe
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) {
-        if (model.getGameState() == GameState.PLAYING) {
-            CellPositionToPixelConverter converter = new CellPositionToPixelConverter(
-                    view.getBoardCanvas(), model.getDimension(), GameView.INNER_MARGIN);
-            int mouseX = e.getX();
-            int mouseY = e.getY();
-            model.setSelectedCell(new CellPosition(converter.getRowFromYCoordinate(mouseY),
-                    converter.getColumnFromXCoordinate(mouseX)));
-        }
-        view.repaint();
-    }
-
-    @Override
     public void mousePressed(MouseEvent e) {
         if (model.getGameState() == GameState.PLAYING) {
             CellPositionToPixelConverter converter = new CellPositionToPixelConverter(
@@ -174,17 +176,11 @@ public class SudokuController implements KeyListener, ActionListener, MouseListe
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {
-        if (model.getGameState() == GameState.PLAYING) {
-            CellPositionToPixelConverter converter = new CellPositionToPixelConverter(
-                    view.getBoardCanvas(), model.getDimension(), GameView.INNER_MARGIN);
-            int mouseX = e.getX();
-            int mouseY = e.getY();
-            model.setSelectedCell(new CellPosition(converter.getRowFromYCoordinate(mouseY),
-                    converter.getColumnFromXCoordinate(mouseX)));
-        }
-        view.repaint();
+    public void mouseClicked(MouseEvent e) {
+    }
 
+    @Override
+    public void mouseReleased(MouseEvent e) {
     }
 
     @Override

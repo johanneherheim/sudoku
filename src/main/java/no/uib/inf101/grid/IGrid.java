@@ -2,6 +2,8 @@ package no.uib.inf101.grid;
 
 /**
  * Interface for classes that represent a grid.
+ * Modified IGrid from semesteroppgave 1 (Tetris), INF101 spring 2024:
+ * https://git.app.uib.no/ii/inf101/24v/assignments/Johanne.Herheim_tetris
  */
 public interface IGrid extends GridDimension, Iterable<GridCell> {
 

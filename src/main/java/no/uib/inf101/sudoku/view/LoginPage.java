@@ -14,28 +14,39 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The LoginPage class represents the login page of the application.
+ * It provides functionality for user authentication and registration.
+ */
 public class LoginPage {
 
-    /** Login window */
+    // login window
     private final JFrame loginFrame = new JFrame();
 
-    /** Buttons */
+    // buttons
     private final JButton loginButton = new JButton("Logg inn");
     private final JButton signupButton = new JButton("Ny brukar");
 
-    /** Text fields */
+    // input fields
     private final JTextField usernameInput = new JTextField();
     private final JPasswordField passwordInput = new JPasswordField();
 
-    /** Labels */
+    // labels
     private final JLabel usernameLabel = new JLabel("Brukarnavn:");
     private final JLabel passwordLabel = new JLabel("Passord:");
     private final JLabel messageLabel = new JLabel();
 
-    /** User utils */
+    // user data
     private final UserUtils userQueries = new UserUtils();
     private List<User> users = new ArrayList<User>();
 
+    /**
+     * Constructor for the LoginPage class. Initializes the login page.
+     * It sets up the login window and adds the necessary components.
+     * It also sets up the event listeners for the login and signup buttons.
+     * The login page is responsible for authenticating users and launching the
+     * game. It also provides functionality for user registration.
+     */
     public LoginPage() {
         LoginController controller = new LoginController(this);
 
@@ -77,43 +88,99 @@ public class LoginPage {
         loginFrame.setVisible(true);
     }
 
+    /**
+     * Returns the login button.
+     *
+     * @return the login button
+     */
     public JButton getLoginButton() {
         return loginButton;
     }
 
+    /**
+     * Returns the signup button.
+     *
+     * @return the signup button
+     */
     public JButton getSignupButton() {
         return signupButton;
     }
 
+    /**
+     * Returns the username input field.
+     *
+     * @return the username input field
+     */
     public String getUsername() {
         return usernameInput.getText();
     }
 
+    /**
+     * Returns the password input field.
+     *
+     * @return the password input field
+     */
     public String getPassword() {
         return new String(passwordInput.getPassword());
     }
 
+    /**
+     * Sets the message label text.
+     *
+     * @param message the message to be displayed
+     */
     public void setMessage(String message) {
         messageLabel.setText(message);
     }
 
-    public void clearFields(boolean onlyPassword) {
-        if (onlyPassword) {
-            passwordInput.setText("");
-        } else {
+    /**
+     * Clears the input fields.
+     *
+     * @param username whether to clear the username field
+     * @param password whether to clear the password field
+     */
+    public void clearFields(boolean username, boolean password) {
+        if (username) {
             usernameInput.setText("");
+        }
+        if (password) {
             passwordInput.setText("");
         }
     }
 
+    /**
+     * Returns a list of all users.
+     *
+     * @return a list of all users
+     */
     public List<User> getAllUsers() {
         return users;
     }
 
+    /**
+     * Returns the user queries object.
+     *
+     * @return the user queries object
+     */
     public UserUtils getUserQueries() {
         return userQueries;
     }
 
+    /**
+     * Returns the hashed password of the specified user.
+     *
+     * @param username the username of the user
+     * @return the password of the user
+     */
+    public String getPasswordToUser(String username) {
+        return userQueries.getUser(username).password();
+    }
+
+    /**
+     * Launches the game with the specified username.
+     *
+     * @param username the username of the player
+     */
     public void launchGame(String username) {
         GameView gameView = new GameView(username);
         System.out.println("Logging inn as " + username + " ...");

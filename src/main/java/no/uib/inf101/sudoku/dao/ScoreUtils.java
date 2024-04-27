@@ -12,9 +12,10 @@ import java.util.Comparator;
 import java.util.List;
 
 import no.uib.inf101.sudoku.model.Score;
-//username, score, finishedAt, timeUsed, lifesUsed, hintsUsed, startBoard, solvedBoard, difficulty
 
-public class ScoreUtils {
+public class ScoreUtils implements IScoreUtils {
+
+    @Override
     public List<Score> getAllScores() {
         String csvFilePath = "src/main/resources/db/score.csv";
         String line;
@@ -29,7 +30,7 @@ public class ScoreUtils {
                 String username = data[0].trim();
                 Integer score = Integer.parseInt(data[1].trim());
                 LocalDateTime finishedAt = LocalDateTime.parse(data[2].trim());
-                int timeUsed = Integer.parseInt(data[3].trim());
+                Integer timeUsed = Integer.parseInt(data[3].trim());
                 Integer lifesUsed = Integer.parseInt(data[4].trim());
                 Integer hintsUsed = Integer.parseInt(data[5].trim());
                 String startBoard = data[6].trim();
@@ -44,6 +45,7 @@ public class ScoreUtils {
         }
     }
 
+    @Override
     public List<Score> getScoreFromUser(String username) {
         List<Score> scoreData = new ArrayList<Score>();
         for (Score score : getAllScores()) {
@@ -55,6 +57,7 @@ public class ScoreUtils {
 
     }
 
+    @Override
     public void insertScore(String username, Integer score, long elapsedTime, Integer lifesUsed, Integer hintsUsed,
             int[][] startBoard, int[][] solvedBoard, Integer difficulty) {
         // stackoverflow
@@ -76,6 +79,7 @@ public class ScoreUtils {
         }
     }
 
+    @Override
     public List<Score> sortScores(List<Score> scores) {
         Comparator<Score> lifesAndTimeComparator = new Comparator<Score>() {
             @Override

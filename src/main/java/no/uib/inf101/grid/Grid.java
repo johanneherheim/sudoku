@@ -3,6 +3,10 @@ package no.uib.inf101.grid;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/**
+ * Modified Grid from semesteroppgave 1 (Tetris), INF101 spring 2024:
+ * https://git.app.uib.no/ii/inf101/24v/assignments/Johanne.Herheim_tetris
+ */
 public class Grid implements IGrid {
 
     private final int rows;

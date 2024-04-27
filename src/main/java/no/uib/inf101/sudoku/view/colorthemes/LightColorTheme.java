@@ -5,6 +5,10 @@ import java.awt.Color;
 import no.uib.inf101.grid.CellPosition;
 import no.uib.inf101.grid.GridCell;
 
+/**
+ * The LightColorTheme class represents a light color theme for the Sudoku game.
+ * The light color theme is a light theme with red cells for incorrect
+ */
 public class LightColorTheme implements ColorTheme {
 
     @Override

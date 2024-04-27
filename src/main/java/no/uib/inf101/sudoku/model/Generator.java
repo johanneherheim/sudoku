@@ -4,29 +4,61 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Generates a Sudoku board with a given difficulty.
+ */
 public class Generator {
+
+    // Number of cells removed
     private static final int EASY_CELLS_REMOVED = 1;
     private static final int MEDIUM_CELLS_REMOVED = 40;
     private static final int HARD_CELLS_REMOVED = 55;
 
+    /** num cells per row and col */
     private static final int SIZE = 9;
-    private static final int EMPTY = 0;
-    Difficulty difficulty;
-    private static int[][] solvedBoard;
-    private static int[][] playableBoard;
-    Solver solver = new Solver();
 
+    /** an empty cell has the number 0 */
+    private static final int EMPTY = 0;
+
+    /** used to check if a board is solvable */
+    private static final Solver solver = new Solver();
+
+    /** difficulty to the current game */
+    private final Difficulty difficulty;
+
+    /** the solution */
+    private final int[][] solvedBoard;
+
+    /** the board that the user sees on the screen */
+    private final int[][] playableBoard;
+
+    /**
+     * Constructor for the Generator class.
+     * 
+     * @param difficulty the difficulty of the game
+     */
     public Generator(Difficulty difficulty) {
         this.difficulty = difficulty;
-        solvedBoard = new int[SIZE][SIZE];
-        playableBoard = new int[SIZE][SIZE];
+        this.solvedBoard = new int[SIZE][SIZE];
+        this.playableBoard = new int[SIZE][SIZE];
     }
 
+    /**
+     * Generates a new Sudoku board by filling the board with numbers and then
+     * removing cells to make the board playable.
+     */
     public void generateBoard() {
         fillBoard(0, 0);
-        makeBoardPlayable(difficultyEnumToId(difficulty));
+        makeBoardPlayable(difficultyToCellsRemoved(difficulty));
     }
 
+    /**
+     * Fills the board with numbers.
+     * 
+     * @param row the row
+     * @param col the column
+     * @return true if the board is filled, false otherwise
+     */
     private boolean fillBoard(int row, int col) {
         if (row == SIZE) {
             return true;
@@ -49,6 +81,14 @@ public class Generator {
         return false;
     }
 
+    /**
+     * Checks if a number is valid in a given row, column and 3x3 square.
+     * 
+     * @param row the row
+     * @param col the column
+     * @param num the number
+     * @return true if the number is valid, false otherwise
+     */
     private boolean isValid(int row, int col, int num) {
         for (int i = 0; i < SIZE; i++) {
             if (solvedBoard[row][i] == num || solvedBoard[i][col] == num
@@ -59,6 +99,12 @@ public class Generator {
         return true;
     }
 
+    /**
+     * Makes the board playable by removing cells. If the board is unsolvable, a new
+     * board is generated.
+     * 
+     * @param difficulty the difficulty of the game
+     */
     private void makeBoardPlayable(int difficulty) {
         for (int i = 0; i < SIZE; i++) {
             playableBoard[i] = Arrays.copyOf(solvedBoard[i], SIZE);
@@ -86,15 +132,31 @@ public class Generator {
         }
     }
 
+    /**
+     * Returns the solved board.
+     * 
+     * @return the solved board
+     */
     public int[][] getSolvedBoard() {
         return solvedBoard;
     }
 
+    /**
+     * Returns the playable board.
+     * 
+     * @return the playable board
+     */
     public int[][] getPlayableBoard() {
         return playableBoard;
     }
 
-    public Integer difficultyEnumToId(Difficulty difficulty) {
+    /**
+     * Returns the number of cells removed based on the difficulty.
+     * 
+     * @param difficulty
+     * @return the number of cells removed
+     */
+    public Integer difficultyToCellsRemoved(Difficulty difficulty) {
         switch (difficulty) {
             case EASY:
                 return EASY_CELLS_REMOVED;
@@ -104,15 +166,6 @@ public class Generator {
                 return HARD_CELLS_REMOVED;
             default:
                 throw new IllegalArgumentException("Unsupported difficulty: " + difficulty);
-        }
-    }
-
-    public static void printBoard(int[][] board) {
-        for (int row = 0; row < SIZE; row++) {
-            for (int column = 0; column < SIZE; column++) {
-                System.out.print(board[row][column] + " ");
-            }
-            System.out.println();
         }
     }
 }

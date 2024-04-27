@@ -5,6 +5,10 @@ import java.awt.Color;
 import no.uib.inf101.grid.CellPosition;
 import no.uib.inf101.grid.GridCell;
 
+/**
+ * The DefaultColorTheme class represents the default color theme for the Sudoku
+ * game. The default color theme is a dark theme with red cells for incorrect
+ */
 public class DefaultColorTheme implements ColorTheme {
 
     @Override

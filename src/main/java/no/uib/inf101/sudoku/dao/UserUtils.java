@@ -10,8 +10,9 @@ import java.util.List;
 
 import no.uib.inf101.sudoku.model.User;
 
-public class UserUtils {
+public class UserUtils implements IUserUtils {
 
+    @Override
     public List<User> getAllUsers() {
         String csvFilePath = "src/main/resources/db/user.csv";
         String line;
@@ -33,6 +34,7 @@ public class UserUtils {
         }
     }
 
+    @Override
     public void insertUser(String username, String password) {
         // stackoverflow
         // https://stackoverflow.com/questions/5531455/how-to-hash-some-string-with-sha-256-in-java
@@ -42,5 +44,15 @@ public class UserUtils {
         } catch (Exception e) {
             throw new RuntimeException("Error adding new user: " + e.getMessage());
         }
+    }
+
+    @Override
+    public User getUser(String username) {
+        for (User user : getAllUsers()) {
+            if (user.username().equals(username)) {
+                return user;
+            }
+        }
+        throw new RuntimeException("User not found");
     }
 }

@@ -286,12 +286,14 @@ public class GameView extends JFrame {
 
     private String difficultyNumberToString(int number) {
         switch (number) {
-            case 2:
+            case 20:
+                return "EASY";
+            case 40:
                 return "MEDIUM";
-            case 3:
+            case 55:
                 return "HARD";
             default:
-                return "EASY";
+                return "UNKNOWN DIFFICULTY";
         }
     }
 
@@ -476,7 +478,7 @@ public class GameView extends JFrame {
                 BOARD_WIDTH + OUTER_MARGIN * 2 + HEADER_HEIGHT + OUTER_MARGIN);
         playingScreen.add(playingPanel);
 
-        model.start(difficulty);
+        model.startGame(difficulty);
         model.setGameState(GameState.PLAYING);
         secondsPassed = 0;
         changeCard("3");

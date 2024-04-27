@@ -7,22 +7,51 @@ import no.uib.inf101.sudoku.controller.ControllableSudokuModel;
 import no.uib.inf101.sudoku.dao.ScoreUtils;
 import no.uib.inf101.sudoku.view.ViewableSudokuModel;
 
+/**
+ * The SudokuModel class represents the model component of the Sudoku game.
+ * It implements both the ViewableSudokuModel and ControllableSudokuModel
+ * interfaces. This class is responsible for managing the game state, the Sudoku
+ * board, and the player's progress.
+ */
 public class SudokuModel implements ViewableSudokuModel, ControllableSudokuModel {
-    private SudokuBoard board;
-    private Generator generator;
-    private CellPosition selectedCell;
-    private GameState gameState;
-    private ScoreUtils scoreQueries = new ScoreUtils();
-    private String username;
-    Difficulty difficulty;
-    int time;
-    int lifes;
 
+    /** The SudokuBoard object representing the game board. */
+    private SudokuBoard board;
+
+    /** The Generator object used to generate the Sudoku board. */
+    private Generator generator;
+
+    /** The currently selected cell position. */
+    private CellPosition selectedCell;
+
+    /** The current state of the game. */
+    private GameState gameState;
+
+    /** The utility class for score-related queries. */
+    private ScoreUtils scoreQueries = new ScoreUtils();
+
+    /** The username of the player */
+    private String username;
+
+    /** The difficulty level of the game. */
+    private Difficulty difficulty;
+
+    /** The time taken to complete the game. */
+    private int time;
+
+    /** The number of remaining lives. */
+    private int lifes;
+
+    /**
+     * Constructs a SudokuModel object with the specified username.
+     * 
+     * @param username the username of the player
+     */
     public SudokuModel(String username) {
-        gameState = GameState.WELCOME;
-        difficulty = Difficulty.EASY;
+        this.gameState = GameState.WELCOME;
+        this.difficulty = Difficulty.EASY;
         this.username = username;
-        selectedCell = new CellPosition(0, 0);
+        this.selectedCell = new CellPosition(0, 0);
     }
 
     @Override
@@ -40,6 +69,7 @@ public class SudokuModel implements ViewableSudokuModel, ControllableSudokuModel
         return board;
     }
 
+    @Override
     public void setBoard(int[][] playableBoard, int[][] solvedBoard) {
         board = new SudokuBoard(playableBoard, solvedBoard);
     }
@@ -84,41 +114,32 @@ public class SudokuModel implements ViewableSudokuModel, ControllableSudokuModel
         return true;
     }
 
-    public void saveGame() {
-        scoreQueries.insertScore(username, 0, time, lifes, 0, generator.getPlayableBoard(),
-                generator.getSolvedBoard(), generator.difficultyEnumToId(difficulty));
-    }
-
-    public void start(Difficulty difficulty) {
-        this.difficulty = difficulty;
-        lifes = 3;
-        gameState = GameState.PLAYING;
-
-        generator = new Generator(difficulty);
-        generator.generateBoard();
-        board = new SudokuBoard(generator.getPlayableBoard(), generator.getSolvedBoard());
-    }
-
+    @Override
     public Difficulty getDifficulty() {
         return difficulty;
     }
 
+    @Override
     public void setTime(int time) {
         this.time = time;
     }
 
+    @Override
     public int getLifes() {
         return lifes;
     }
 
+    @Override
     public void setLifes(int lifes) {
         this.lifes = lifes;
     }
 
+    @Override
     public void decreaseLifes() {
         lifes--;
     }
 
+    @Override
     public GridCell getCellFromPosition(CellPosition cell) {
         for (GridCell gridCell : board) {
             if (gridCell.pos().equals(cell)) {
@@ -126,5 +147,22 @@ public class SudokuModel implements ViewableSudokuModel, ControllableSudokuModel
             }
         }
         throw new IllegalArgumentException("This cell does not exist in the board.");
+    }
+
+    @Override
+    public void saveGame() {
+        scoreQueries.insertScore(username, 0, time, lifes, 0, generator.getPlayableBoard(),
+                generator.getSolvedBoard(), generator.difficultyToCellsRemoved(difficulty));
+    }
+
+    @Override
+    public void startGame(Difficulty difficulty) {
+        this.difficulty = difficulty;
+        lifes = 3;
+        gameState = GameState.PLAYING;
+
+        generator = new Generator(difficulty);
+        generator.generateBoard();
+        board = new SudokuBoard(generator.getPlayableBoard(), generator.getSolvedBoard());
     }
 }
