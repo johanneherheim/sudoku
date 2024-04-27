@@ -18,7 +18,7 @@ import java.util.List;
  * The LoginPage class represents the login page of the application.
  * It provides functionality for user authentication and registration.
  */
-public class LoginPage {
+public class LoginPage implements ILoginPage {
 
     // login window
     private final JFrame loginFrame = new JFrame();
@@ -88,57 +88,12 @@ public class LoginPage {
         loginFrame.setVisible(true);
     }
 
-    /**
-     * Returns the login button.
-     *
-     * @return the login button
-     */
-    public JButton getLoginButton() {
-        return loginButton;
-    }
-
-    /**
-     * Returns the signup button.
-     *
-     * @return the signup button
-     */
-    public JButton getSignupButton() {
-        return signupButton;
-    }
-
-    /**
-     * Returns the username input field.
-     *
-     * @return the username input field
-     */
-    public String getUsername() {
-        return usernameInput.getText();
-    }
-
-    /**
-     * Returns the password input field.
-     *
-     * @return the password input field
-     */
-    public String getPassword() {
-        return new String(passwordInput.getPassword());
-    }
-
-    /**
-     * Sets the message label text.
-     *
-     * @param message the message to be displayed
-     */
+    @Override
     public void setMessage(String message) {
         messageLabel.setText(message);
     }
 
-    /**
-     * Clears the input fields.
-     *
-     * @param username whether to clear the username field
-     * @param password whether to clear the password field
-     */
+    @Override
     public void clearFields(boolean username, boolean password) {
         if (username) {
             usernameInput.setText("");
@@ -148,44 +103,57 @@ public class LoginPage {
         }
     }
 
-    /**
-     * Returns a list of all users.
-     *
-     * @return a list of all users
-     */
+    @Override
     public List<User> getAllUsers() {
         return users;
     }
 
-    /**
-     * Returns the user queries object.
-     *
-     * @return the user queries object
-     */
+    @Override
     public UserUtils getUserQueries() {
         return userQueries;
     }
 
-    /**
-     * Returns the hashed password of the specified user.
-     *
-     * @param username the username of the user
-     * @return the password of the user
-     */
+    @Override
     public String getPasswordToUser(String username) {
         return userQueries.getUser(username).password();
     }
 
-    /**
-     * Launches the game with the specified username.
-     *
-     * @param username the username of the player
-     */
-    public void launchGame(String username) {
+    @Override
+    public void launchApplication(String username) {
         GameView gameView = new GameView(username);
         System.out.println("Logging inn as " + username + " ...");
         gameView.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gameView.setVisible(true);
         loginFrame.dispose();
+    }
+
+    @Override
+    public JButton getLoginButton() {
+        return loginButton;
+    }
+
+    @Override
+    public JButton getSignupButton() {
+        return signupButton;
+    }
+
+    @Override
+    public String getUsername() {
+        return usernameInput.getText();
+    }
+
+    @Override
+    public String getPassword() {
+        return new String(passwordInput.getPassword());
+    }
+
+    @Override
+    public JTextField getUsernameInput() {
+        return usernameInput;
+    }
+
+    @Override
+    public JPasswordField getPasswordInput() {
+        return passwordInput;
     }
 }

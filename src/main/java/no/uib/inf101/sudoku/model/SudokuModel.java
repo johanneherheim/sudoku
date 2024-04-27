@@ -151,6 +151,7 @@ public class SudokuModel implements ViewableSudokuModel, ControllableSudokuModel
 
     @Override
     public void saveGame() {
+        gameState = GameState.MENU;
         scoreQueries.insertScore(username, 0, time, lifes, 0, generator.getPlayableBoard(),
                 generator.getSolvedBoard(), generator.difficultyToCellsRemoved(difficulty));
     }

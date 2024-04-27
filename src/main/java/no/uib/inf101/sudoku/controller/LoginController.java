@@ -54,7 +54,7 @@ public class LoginController implements KeyListener, ActionListener {
         String password = loginPage.getPassword();
 
         if (loginPage.getPasswordToUser(username).equals(hash(password))) {
-            loginPage.launchGame(username);
+            loginPage.launchApplication(username);
         } else {
             loginPage.setMessage("Feil passord");
             loginPage.clearFields(false, true);
@@ -93,7 +93,7 @@ public class LoginController implements KeyListener, ActionListener {
 
         else {
             loginPage.getUserQueries().insertUser(newUsername, hash(newPassword));
-            loginPage.launchGame(newUsername);
+            loginPage.launchApplication(newUsername);
         }
     }
 

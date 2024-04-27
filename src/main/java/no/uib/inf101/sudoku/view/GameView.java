@@ -36,14 +36,14 @@ public class GameView extends JFrame {
             BOARD_WIDTH + OUTER_MARGIN * 2 + HEADER_HEIGHT + OUTER_MARGIN);
 
     // instance variables
-    private CardLayout cardLayout;
-    private JPanel cardPanel;
     private SudokuModel model;
+    CardLayout cardLayout;
+    JPanel cardPanel;
     private ColorTheme colorTheme;
     private String name;
     private Timer timer;
     private int secondsPassed;
-    private boolean isDefaultColorTheme = false;
+    boolean isDefaultColorTheme = false;
     private Stack<String> cardHistory = new Stack<>();
 
     // database
@@ -253,13 +253,13 @@ public class GameView extends JFrame {
         Inf101Graphics.drawCenteredString(g2, text, 0, 0, getWidth(), 350);
     }
 
-    public String formatTime(int seconds) {
+    private String formatTime(int seconds) {
         int minutes = seconds / 60;
         int remainingSeconds = seconds % 60;
         return String.format("%02d:%02d ", minutes, remainingSeconds);
     }
 
-    public String formatDate(LocalDateTime date) {
+    private String formatDate(LocalDateTime date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MMM HH:mm");
         return date.format(formatter);
     }
@@ -284,7 +284,7 @@ public class GameView extends JFrame {
                 OUTER_MARGIN + HEADER_HEIGHT - 10);
     }
 
-    private String difficultyNumberToString(int number) {
+    String difficultyNumberToString(int number) {
         switch (number) {
             case 20:
                 return "EASY";
@@ -297,7 +297,7 @@ public class GameView extends JFrame {
         }
     }
 
-    private String lifeToLifeString(int lifes) {
+    String lifeToLifeString(int lifes) {
         switch (lifes) {
             case 2:
                 return " 💚 💚 💔 ";
@@ -366,60 +366,6 @@ public class GameView extends JFrame {
                 y += cellHeight + INNER_MARGIN;
             }
         }
-    }
-
-    // GETTERS FOR BUTTONS
-
-    public JButton getStartButton() {
-        return startButton;
-    }
-
-    public JButton getSaveButton() {
-        return saveButton;
-    }
-
-    public JButton getEasyButton() {
-        return easyButton;
-    }
-
-    public JButton getMediumButton() {
-        return mediumButton;
-    }
-
-    public JButton getHardButton() {
-        return hardButton;
-    }
-
-    public JButton getPauseButton() {
-        return pauseButton;
-    }
-
-    public JButton getExitButton() {
-        return exitButton;
-    }
-
-    public JButton getMyScoresButton() {
-        return myScoresButton;
-    }
-
-    public JButton getLeaderboardButton() {
-        return leaderboardButton;
-    }
-
-    public JButton getBackButton() {
-        return backButton;
-    }
-
-    public JButton getToggleLightModeButton() {
-        return toggleLightModeButton;
-    }
-
-    public JButton getResumeButton() {
-        return resumeButton;
-    }
-
-    public JButton getLogoutButton() {
-        return logoutButton;
     }
 
     // BUTTON ACTIONS
@@ -592,5 +538,63 @@ public class GameView extends JFrame {
         }
         toggleLightModeButton.setText(isDefaultColorTheme ? "🌙" : "🌞");
         isDefaultColorTheme = !isDefaultColorTheme;
+    }
+
+    // GETTERS FOR BUTTONS
+
+    public JButton getStartButton() {
+        return startButton;
+    }
+
+    public JButton getSaveButton() {
+        return saveButton;
+    }
+
+    public JButton getEasyButton() {
+        return easyButton;
+    }
+
+    public JButton getMediumButton() {
+        return mediumButton;
+    }
+
+    public JButton getHardButton() {
+        return hardButton;
+    }
+
+    public JButton getPauseButton() {
+        return pauseButton;
+    }
+
+    public JButton getExitButton() {
+        return exitButton;
+    }
+
+    public JButton getMyScoresButton() {
+        return myScoresButton;
+    }
+
+    public JButton getLeaderboardButton() {
+        return leaderboardButton;
+    }
+
+    public JButton getBackButton() {
+        return backButton;
+    }
+
+    public JButton getToggleLightModeButton() {
+        return toggleLightModeButton;
+    }
+
+    public JButton getResumeButton() {
+        return resumeButton;
+    }
+
+    public JButton getLogoutButton() {
+        return logoutButton;
+    }
+
+    public SudokuModel getModel() {
+        return model;
     }
 }
