@@ -62,11 +62,11 @@ public class CellPositionToPixelConverter {
      * @return the row
      */
     public int getRowFromYCoordinate(int y) {
-        double y0 = this.box.getY();
+        double y0 = this.box.getY() + MARGIN * 10;
         double boxHeight = this.box.getHeight();
         double numberOfRows = this.gd.getRows();
-        double cellHeight = (boxHeight - (numberOfRows + 1) * MARGIN) / numberOfRows;
-        return (int) ((y - y0 - 30) / (cellHeight + MARGIN));
+        double cellHeight = (boxHeight - (numberOfRows + 1 * MARGIN)) / numberOfRows;
+        return (int) ((y - y0) / (cellHeight + MARGIN));
     }
 
     /**
