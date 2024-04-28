@@ -100,7 +100,7 @@ public class GameViewTest {
         assertEquals(11, menuPanel.getComponentCount());
 
         // Checking if the labels are correctly placed
-        assertEquals(" Nytt spill: ", ((JLabel) menuPanel.getComponent(0)).getText());
+        assertEquals(" Nytt spel: ", ((JLabel) menuPanel.getComponent(0)).getText());
         assertEquals(100, menuPanel.getComponent(0).getX());
         assertEquals(310, menuPanel.getComponent(0).getY());
         assertEquals(300, menuPanel.getComponent(0).getWidth());

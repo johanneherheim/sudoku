@@ -53,7 +53,7 @@ public class UserUtils implements IUserUtils {
                 return user;
             }
         }
-        return null;
+        throw new RuntimeException("User not found");
     }
 
     @Override

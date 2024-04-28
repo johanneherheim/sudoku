@@ -16,6 +16,7 @@ public class LoginPageTest {
         loginPage.getPasswordInput().setText("test");
         loginPage.getSignupButton().doClick();
         assertEquals("Test", loginPage.getUsernameInput().getText());
+        userQueries.removeUser("Test");
     }
 
     @Test
@@ -24,7 +25,6 @@ public class LoginPageTest {
         loginPage.getPasswordInput().setText("test");
         loginPage.getSignupButton().doClick();
         assertEquals("Test", loginPage.getUsernameInput().getText());
-        userQueries.removeUser("Test");
     }
 
     @Test
