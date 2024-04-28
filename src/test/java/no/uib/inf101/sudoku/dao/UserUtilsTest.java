@@ -14,9 +14,11 @@ public class UserUtilsTest {
     @Test
     public void testGetAllUsers() {
         UserUtils userUtils = new UserUtils();
-        List<User> users = userUtils.getAllUsers();
+        userUtils.insertUser("testUser", "testPassword");
         // Check if the list is not null and contains at least one user
+        List<User> users = userUtils.getAllUsers();
         assertTrue(users != null && !users.isEmpty());
+        userUtils.removeUser("testUser");
     }
 
     @Test
