@@ -1,5 +1,7 @@
 # Semesteroppgave 2
 
+See video demonstration [here](https://youtu.be/CQ0WoLVT23Q).
+
 ## Before playing
 
 In [_this_](src/main/java/no/uib/inf101/sudoku/model/Generator.java) file, the number of empty cells for each level is set. Depending on your computer, you may need to adjust the numbers accordingly.
