@@ -24,6 +24,11 @@ import no.uib.inf101.sudoku.view.colorthemes.LightColorTheme;
 import no.uib.inf101.sudoku.view.tools.CellPositionToPixelConverter;
 import no.uib.inf101.sudoku.view.tools.Inf101Graphics;
 
+/**
+ * The GameView class represents the graphical user interface for the Sudoku
+ * game. It extends the JFrame class and contains various panels, buttons, and
+ * labels to display the game elements and interact with the user.
+ */
 public class GameView extends JFrame {
 
     // constant values
@@ -52,6 +57,7 @@ public class GameView extends JFrame {
 
     SudokuController controller;
 
+    // buttons
     JButton startButton = new JButton("Start"),
 
             easyButton = new JButton("Lett"),
@@ -74,6 +80,7 @@ public class GameView extends JFrame {
             List.of(startButton, easyButton, mediumButton, hardButton, pauseButton, resumeButton, exitButton,
                     myScoresButton, leaderboardButton, backButton, toggleLightModeButton, saveButton, logoutButton));
 
+    // panels
     JPanel welcomeScreen = new JPanel(null),
             menuScreen = new JPanel(null),
             playingScreen = new JPanel(null),
@@ -85,6 +92,7 @@ public class GameView extends JFrame {
             List.of(welcomeScreen, playingScreen, menuScreen, gameoverScreen,
                     myScoresScreen, leaderboardScreen));
 
+    // game panels for using graphics
     GamePanel playingPanel = new GamePanel();
     GamePanel myScoresPanel = new GamePanel();
     GamePanel leaderboardPanel = new GamePanel();
@@ -94,10 +102,17 @@ public class GameView extends JFrame {
     ArrayList<GamePanel> allGamePanels = new ArrayList<GamePanel>(
             List.of(playingPanel, myScoresPanel, leaderboardPanel, menuPanel, welcomePanel));
 
+    // labels
     JLabel title = new JLabel();
     JLabel gif = new JLabel();
     JLabel saveText = new JLabel("Vil du lagra resultatet?");
 
+    /**
+     * Constructor for the GameView class. Initializes the game view with the given
+     * username. The game view contains a welcome screen, a menu screen, a playing
+     *
+     * @param username the username of the player
+     */
     public GameView(String username) {
 
         setTitle("Sudoku");
@@ -145,6 +160,11 @@ public class GameView extends JFrame {
         startTimer();
     }
 
+    /**
+     * Adds action listeners to all buttons in the game view.
+     * Each button will have the controller as its action listener.
+     * Additionally, the focusability of each button is set to false.
+     */
     private void addActionListeners() {
         for (JButton button : allButtons) {
             button.addActionListener(controller);
@@ -152,12 +172,21 @@ public class GameView extends JFrame {
         }
     }
 
-    // Override the method to change the card layout
+    /**
+     * Changes the current card being displayed in the game view.
+     * 
+     * @param newCard the name of the new card to be displayed
+     */
     private void changeCard(String newCard) {
-        cardHistory.push(newCard); // Push the current card to history
+        cardHistory.push(newCard);
         cardLayout.show(cardPanel, newCard);
     }
 
+    /**
+     * Starts the timer for the game.
+     * The timer increments the seconds passed and repaints the view every second
+     * while the game is in the playing state.
+     */
     private void startTimer() {
         timer = new Timer(1000, new ActionListener() {
             @Override
@@ -171,6 +200,11 @@ public class GameView extends JFrame {
         timer.start();
     }
 
+    /**
+     * The GamePanel class represents a panel that is used to display the Sudoku
+     * game. It extends the JPanel class and overrides the paintComponent method to
+     * draw the game on the panel.
+     */
     private class GamePanel extends JPanel {
 
         @Override
@@ -182,6 +216,12 @@ public class GameView extends JFrame {
 
     }
 
+    /**
+     * Draws the game on the given graphics object.
+     * The game is drawn based on the current state of the game model.
+     * 
+     * @param g2 the graphics object to draw the game on
+     */
     private void drawGame(Graphics2D g2) {
         if (model.getGameState() == GameState.FINISHED) {
             finished();
@@ -217,6 +257,14 @@ public class GameView extends JFrame {
         model.setTime(secondsPassed);
     }
 
+    /**
+     * Draws a single cell on the game view.
+     *
+     * @param g2        The Graphics2D object used for drawing.
+     * @param cell      The GridCell object representing the cell to be drawn.
+     * @param converter The CellPositionToPixelConverter object used for converting
+     *                  cell positions to pixel coordinates.
+     */
     private void drawCell(Graphics2D g2, GridCell cell, CellPositionToPixelConverter converter) {
         Rectangle2D cellBounds = converter.getBoundsForCell(cell.pos());
         if (model.getSelectedCell().equals(cell.pos())) {
@@ -235,12 +283,23 @@ public class GameView extends JFrame {
         }
     }
 
+    /**
+     * Returns the Rectangle2D representing the board canvas.
+     *
+     * @return the Rectangle2D representing the board canvas
+     */
     public Rectangle2D getBoardCanvas() {
         double x0 = getWidth() / 2 - BOARD_WIDTH / 2;
         double y0 = HEADER_HEIGHT + OUTER_MARGIN;
         return new Rectangle2D.Double(x0, y0, BOARD_WIDTH, BOARD_WIDTH);
     }
 
+    /**
+     * Draws the header of the game view with the specified text.
+     *
+     * @param g2   the Graphics2D object used for drawing
+     * @param text the text to be displayed in the header
+     */
     private void drawHeader(Graphics2D g2, String text) {
         g2.setColor(colorTheme.getTextColor());
         g2.setFont(new Font(FONT, Font.BOLD, 70));
@@ -248,23 +307,47 @@ public class GameView extends JFrame {
                 HEADER_HEIGHT + OUTER_MARGIN);
     }
 
+    /**
+     * Draws the specified text on the graphics context.
+     *
+     * @param g2   The graphics context to draw on.
+     * @param text The text to be drawn.
+     */
     private void drawText(Graphics2D g2, String text) {
         g2.setColor(colorTheme.getTextColor());
         g2.setFont(new Font(FONT, Font.BOLD, 20));
         Inf101Graphics.drawCenteredString(g2, text, 0, 0, getWidth(), 350);
     }
 
+    /**
+     * Formats the given time in seconds into a string representation of minutes and
+     * seconds.
+     *
+     * @param seconds the time in seconds to be formatted
+     * @return a string representation of the time in the format "MM:SS"
+     */
     private String formatTime(int seconds) {
         int minutes = seconds / 60;
         int remainingSeconds = seconds % 60;
         return String.format("%02d:%02d ", minutes, remainingSeconds);
     }
 
+    /**
+     * Formats a LocalDateTime object into a string representation.
+     *
+     * @param date the LocalDateTime object to be formatted
+     * @return the formatted string representation of the date
+     */
     private String formatDate(LocalDateTime date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MMM HH:mm");
         return date.format(formatter);
     }
 
+    /**
+     * Draws the timer on the game view.
+     * 
+     * @param g2 the Graphics2D object used for drawing
+     */
     private void drawTimer(Graphics2D g2) {
         g2.setColor(colorTheme.getTextColor());
         g2.setFont(new Font(FONT, Font.BOLD, 20));
@@ -279,12 +362,24 @@ public class GameView extends JFrame {
                 OUTER_MARGIN + HEADER_HEIGHT - 10);
     }
 
+    /**
+     * Draws the number of remaining lives on the game view.
+     * 
+     * @param g2    the Graphics2D object used for drawing
+     * @param lifes the number of remaining lives
+     */
     private void drawLifes(Graphics2D g2, int lifes) {
         g2.setFont(new Font(FONT, Font.PLAIN, Math.min(getWidth() / 30, getHeight() / 30)));
         g2.drawString(lifeToLifeString(lifes), getWidth() / 2 - BOARD_WIDTH / 2,
                 OUTER_MARGIN + HEADER_HEIGHT - 10);
     }
 
+    /**
+     * Converts a difficulty number to its corresponding string representation.
+     *
+     * @param number the difficulty number to convert
+     * @return the string representation of the difficulty level
+     */
     String difficultyNumberToString(int number) {
         switch (number) {
             case 20:
@@ -298,6 +393,12 @@ public class GameView extends JFrame {
         }
     }
 
+    /**
+     * Converts the number of lives to a string representation.
+     *
+     * @param lifes the number of lives
+     * @return the string representation of the number of lives
+     */
     String lifeToLifeString(int lifes) {
         switch (lifes) {
             case 2:
@@ -311,6 +412,14 @@ public class GameView extends JFrame {
         }
     }
 
+    /**
+     * Draws the scores on the game view.
+     *
+     * @param g2           the Graphics2D object used for drawing
+     * @param scores       the list of scores to be displayed
+     * @param isUserScores a boolean indicating whether the scores are user scores
+     *                     or not
+     */
     private void drawScores(Graphics2D g2, List<Score> scores, boolean isUserScores) {
 
         scores = scoreQueries.sortScores(scores);
@@ -370,6 +479,10 @@ public class GameView extends JFrame {
     }
 
     // BUTTON ACTIONS
+
+    /**
+     * Displays the menu screen and sets up the buttons and labels.
+     */
     public void goToMenu() {
         // adding title for buttons
         JLabel difficultyText = new JLabel(" Nytt spel: ");
@@ -415,6 +528,11 @@ public class GameView extends JFrame {
         changeCard("2");
     }
 
+    /**
+     * Starts a new game with the specified difficulty level.
+     *
+     * @param difficulty the difficulty level of the game
+     */
     public void start(Difficulty difficulty) {
         menuScreen.remove(menuPanel);
         // initialize pause button
@@ -433,6 +551,12 @@ public class GameView extends JFrame {
         System.out.println("Game state: " + model.getGameState());
     }
 
+    /**
+     * Pauses the game by adding the resume button and menu panel to the menu
+     * screen, setting the game state to MENU, and changing the card to "2".
+     * Prints a message indicating that the game is being paused and the current
+     * game state.
+     */
     public void pause() {
         menuScreen.add(resumeButton);
         menuScreen.add(menuPanel);
@@ -442,6 +566,10 @@ public class GameView extends JFrame {
         System.out.println("Game state: " + model.getGameState());
     }
 
+    /**
+     * Resumes the game by removing the resume button, setting the game state to
+     * playing, changing the card to "3", and printing the game state.
+     */
     public void resume() {
         menuScreen.remove(resumeButton);
         model.setGameState(GameState.PLAYING);
@@ -450,6 +578,12 @@ public class GameView extends JFrame {
         System.out.println("Game state: " + model.getGameState());
     }
 
+    /**
+     * Displays the user's scores in the game view.
+     * This method sets up the necessary components and layout to display the
+     * scores. It also updates the game state and prints the current game state to
+     * the console.
+     */
     public void myScores() {
         backButton.setBounds(10, 10, 100, 30);
         myScoresScreen.add(backButton);
@@ -462,6 +596,12 @@ public class GameView extends JFrame {
         System.out.println("Game state: " + model.getGameState());
     }
 
+    /**
+     * Displays the leaderboard screen and updates the game state to LEADERBOARD.
+     * This method sets the bounds and adds components to the leaderboard screen,
+     * including a back button and the leaderboard panel. It also changes the
+     * current card to "6" and prints the current game state to the console.
+     */
     public void leaderBoard() {
         backButton.setBounds(10, 10, 100, 30);
         leaderboardScreen.add(backButton);
@@ -474,6 +614,14 @@ public class GameView extends JFrame {
         System.out.println("Game state: " + model.getGameState());
     }
 
+    /**
+     * Displays the game over screen with appropriate messages and icons based on
+     * the game state.
+     * If the player has no more lives, it displays a losing message and a losing
+     * GIF. If the player has lives remaining, it displays a winning message and a
+     * winning GIF. The screen also includes options to save the game and go back to
+     * the previous screen.
+     */
     public void finished() {
         cardLayout.show(cardPanel, "4");
         if (model.getLifes() == 0) {
@@ -507,6 +655,11 @@ public class GameView extends JFrame {
 
     }
 
+    /**
+     * Saves the current game state and prints the game state and score to the
+     * console.
+     * After saving, it navigates back to the menu.
+     */
     public void save() {
         model.saveGame();
         System.out.println("Saving score ...");
@@ -514,18 +667,39 @@ public class GameView extends JFrame {
         goToMenu();
     }
 
+    /**
+     * Logs out the user from the game.
+     * This method prints a message indicating that the user is logging out,
+     * disposes the current game view, and creates a new login page.
+     */
     public void logout() {
         System.out.println("Logging out ...");
         dispose();
         new LoginPage();
     }
 
+    /**
+     * Updates the queries by initializing a new instance of ScoreUtils,
+     * retrieving all scores, and retrieving the score from the user.
+     */
     public void updateQueries() {
         scoreQueries = new ScoreUtils();
         allScores = scoreQueries.getAllScores();
         userScores = scoreQueries.getScoreFromUser(name);
     }
 
+    /**
+     * Toggles the light mode of the game view.
+     * If the current color theme is the default color theme, it switches to the
+     * light color theme.
+     * If the current color theme is the light color theme, it switches to the
+     * default color theme.
+     * This method updates the background color and text color of all panels and
+     * labels in the game view,
+     * as well as the background color of all game panels.
+     * It also updates the text of the toggle light mode button to reflect the
+     * current color theme.
+     */
     public void toggleLightMode() {
         colorTheme = isDefaultColorTheme ? new LightColorTheme() : new DefaultColorTheme();
         for (JPanel panel : allPanels) {
